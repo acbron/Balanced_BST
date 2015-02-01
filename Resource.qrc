@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/delete.png</file>
+        <file>img/insert.png</file>
+        <file>img/search.png</file>
+        <file>img/node.png</file>
+        <file>img/line.png</file>
+    </qresource>
+</RCC>
