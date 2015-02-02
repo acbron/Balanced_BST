@@ -25,13 +25,13 @@ void Point::paint(QPainter &painter)
         painter.setPen(QPen(fillColor, 2, Qt::SolidLine, Qt::RoundCap));
     }
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawEllipse(centerX, centerY, 64, 64); // change magic number later
+    painter.drawEllipse(centerX, centerY, 32, 32); // change magic number later
 
     QFont newFont;
-    newFont.setPointSize(15); //magic number
+    newFont.setPointSize(10); //magic number
     painter.setPen(Qt::white);
     painter.setFont(newFont);
-    painter.drawText(centerX, centerY, 64, 64, Qt::AlignCenter, weight);
+    painter.drawText(centerX, centerY, 32, 32, Qt::AlignCenter, weight);
 }
 
 void Point::setCenter(int center_x, int center_y)

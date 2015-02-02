@@ -1,28 +1,32 @@
 #include "ui_window.h"
 #include <QtWidgets>
 
-const int BASE_HEIGHT = 768;
-const int BASE_WIDTH = 1024;
+const int BASE_HEIGHT = 512;
+const int BASE_WIDTH = 1280;
+const int MAX_TOOLBAR_HEIGHT = 48;
+const int MAX_LINE_EDIT_LENGTH = 128;
+const int MAX_LINE_INPUT_LENGTH = 4;
 
-int CentralWidget::ii = 0;
+int WorksWidget::i = 0;
 
 MainWindow::MainWindow()
 {
     createActions();
     createMenus();
-    createToolBars();
 
-    mainWidget = new CentralWidget(this);
+    vlayout = new QVBoxLayout();
+    vlayout->setContentsMargins(0, 0, 0, 0);
 
-    scrollArea = new QScrollArea;
+    QWidget *centralWidget = new QWidget(this);
+    setCentralWidget(centralWidget);
 
-    scrollArea->setWidget(mainWidget);
-    scrollArea->setWidgetResizable(true);
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    toolbar = new ToolBar(centralWidget);
+    workspace = new WorksWidget(centralWidget);
+    workspace->setMinimumSize(BASE_WIDTH, BASE_HEIGHT);
 
-    setCentralWidget(scrollArea);
-
+    vlayout->addWidget(toolbar);
+    vlayout->addWidget(workspace);
+    centralWidget->setLayout(vlayout);
     createStatusBar();
 
     /*
@@ -37,6 +41,8 @@ MainWindow::MainWindow()
     line->setPixmap(QPixmap(":/img/line.png").transformed(matrix, Qt::SmoothTransformation));
   //  line->setGeometry((BASE_WIDTH >> 1) + 32, (BASE_HEIGHT >> 4) + 32, 200, 200);
     line->setGeometry((BASE_WIDTH >> 1) + 32, (BASE_HEIGHT >> 4), 200, 200);*/
+
+    connect(toolbar, &ToolBar::sendPaintingSignal, workspace, &WorksWidget::changeStatus);
 
 }
 
@@ -56,11 +62,6 @@ void MainWindow::createActions()
 
     aboutAction = new QAction(tr("&About"), this);
     connect(aboutAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-
-    inputAction = new QAction(this);
-    insertAction = new QAction(QIcon(":/img/insert.png"), tr("Insert"), this);
-    deleteAction = new QAction(QIcon(":/img/delete.png"),tr("Delete"), this);
-    searchAction = new QAction(QIcon(":/img/search.png"), tr("Search"), this);
 }
 
 void MainWindow::createMenus()
@@ -76,22 +77,122 @@ void MainWindow::createMenus()
     helpMenu->addAction(aboutAction);
 }
 
-void MainWindow::createToolBars()
-{
-    inputToolBar = addToolBar(tr("&Input"));
-    inputLine = new QLineEdit(this);
-    inputLine->setPlaceholderText(tr("input a number"));
-    inputLine->setStatusTip(tr("input a number"));
-    inputToolBar->addWidget(inputLine);
-
-    operateToolBar = addToolBar(tr("Operation"));
-    operateToolBar->addAction(insertAction);
-    operateToolBar->addAction(deleteAction);
-    operateToolBar->addAction(searchAction);
-}
-
-
 void MainWindow::createStatusBar()
 {
     statusBar()->showMessage(tr("Status Bar"));
 }
+
+WorksWidget::WorksWidget()
+{
+
+}
+
+WorksWidget::WorksWidget(QWidget *parent)
+{
+    setParent(parent);
+}
+
+WorksWidget::~WorksWidget()
+{
+
+}
+
+void WorksWidget::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    foreach (Shape *e, list) {
+        e->paint(painter);
+    }
+}
+
+void WorksWidget::changeStatus()
+{
+    i++;
+    Shape *shape = NULL;
+    shape = new Point(i, i, NoColor, "9527");
+    list << shape;
+    update();
+}
+
+ToolBar::ToolBar()
+{
+
+}
+
+ToolBar::ToolBar(QWidget *parent)
+{
+    setParent(parent);
+    initialize();
+}
+
+ToolBar::~ToolBar()
+{
+
+}
+
+void ToolBar::initSize()
+{
+    setMinimumSize(BASE_WIDTH, MAX_TOOLBAR_HEIGHT);
+    setMaximumHeight(MAX_TOOLBAR_HEIGHT);
+}
+
+void ToolBar::initLayout()
+{
+    hlayout = new QHBoxLayout();
+    hlayout->setAlignment(Qt::AlignLeft);
+    hlayout->addWidget(insertLine);
+    hlayout->addWidget(insertButton);
+    hlayout->addWidget(removeLine);
+    hlayout->addWidget(removeButton);
+    hlayout->addWidget(searchLine);
+    hlayout->addWidget(searchButton);
+    this->setLayout(hlayout);
+}
+
+void ToolBar::initElements()
+{
+    insertLine = new QLineEdit(this);
+    removeLine = new QLineEdit(this);
+    searchLine = new QLineEdit(this);
+    insertLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
+    removeLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
+    searchLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
+    insertLine->setMaxLength(MAX_LINE_INPUT_LENGTH);
+    removeLine->setMaxLength(MAX_LINE_INPUT_LENGTH);
+    searchLine->setMaxLength(MAX_LINE_INPUT_LENGTH);
+    insertLine->setPlaceholderText(tr("input..."));
+    removeLine->setPlaceholderText(tr("input..."));
+    searchLine->setPlaceholderText(tr("input..."));
+
+    insertButton = new QPushButton(tr("insert"), this);
+    removeButton = new QPushButton(tr("remove"), this);
+    searchButton = new QPushButton(tr("search"), this);
+    insertButton->setMaximumWidth(60);
+    removeButton->setMaximumWidth(60);
+    searchButton->setMaximumWidth(60);
+
+    connect(insertButton, SIGNAL(clicked()), this, SLOT(emitPaintingSignal()));
+}
+
+void ToolBar::initialize()
+{
+    initSize();
+    initElements();
+    initLayout();
+/*
+ * Set Background
+ *
+    QPixmap pixmap = QPixmap(":/img/ToolBar.png").scaled(this->size());
+    QPalette Pal(palette());
+    Pal.setBrush(QPalette::Background, QBrush(pixmap));
+    setAutoFillBackground(true);
+    setPalette(Pal);
+*/
+
+}
+
+void ToolBar::emitPaintingSignal()
+{
+    emit sendPaintingSignal();
+}
+

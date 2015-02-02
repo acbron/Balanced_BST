@@ -9,7 +9,9 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QPainter>
+#include <QBrush>
 #include <QPaintDevice>
 #include <QPaintEngine>
 #include <QVBoxLayout>
@@ -26,36 +28,16 @@ QT_END_NAMESPACE
 
 extern const int BASE_HEIGHT;
 extern const int BASE_WIDTH;
+extern const int MAX_TOOLBAR_HEIGHT;
+extern const int MAX_LINE_EDIT_LENGTH;
+extern const int MAX_LINE_INPUT_LENGTH;
 
-class CentralWidget : public QWidget {
-    Q_OBJECT
+class WorksWidget;
+class ToolBar;
 
-public:
-    CentralWidget() {}
-    CentralWidget(QWidget *parent) {
-        this->setParent(parent);
-    }
-
-    ~CentralWidget() {}
-
-protected:
-    void paintEvent(QPaintEvent *) {
-        QPainter painter(this);
-        foreach (Point e, list) {
-            e.paint(painter);
-        }
-    }
-    void mousePressEvent(QMouseEvent *) {
-        ii++;
-        Point edge(ii, ii, NoColor, "9527");
-        list.push_back(edge);
-        update();
-    }
-private:
-    QList <Point>  list;
-    static int ii;
-};
-
+/*
+ * MainWindow class
+ */
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -63,6 +45,8 @@ public:
 
     MainWindow();
     ~MainWindow();
+
+private:
 
     void createActions();
     void createMenus();
@@ -72,28 +56,84 @@ public:
 
 private:
 
+    QVBoxLayout *vlayout;
+    WorksWidget *workspace;
+    ToolBar *toolbar;
     QMenu *selectMenu;
     QMenu *helpMenu;
-
-    QToolBar *inputToolBar;
-    QToolBar *operateToolBar;
-
     QAction *bstAction;
     QAction *avlAction;
     QAction *rbtAction;
     QAction *sbtAction;
     QAction *aboutAction;
-    QAction *inputAction;
-    QAction *insertAction;
-    QAction *deleteAction;
-    QAction *searchAction;
+};
 
-    QLineEdit *inputLine;
+/*
+ * Working Area Widget
+ */
+class WorksWidget : public QWidget {
+    Q_OBJECT
 
-    CentralWidget *mainWidget;
-    QScrollArea *scrollArea;
+private:
+    WorksWidget();
+
+public:
+    WorksWidget(QWidget *);
+    ~WorksWidget();
+
+protected:
+    void paintEvent(QPaintEvent *);
+
+public slots:
+    void changeStatus();
+
+private:
+    QList <Shape *> list;
+    static int i; //for testing
 };
 
 
+/*
+ * ToolBar
+ */
+class ToolBar : public QWidget {
+    Q_OBJECT
+
+private:
+    ToolBar();
+
+public:
+    ToolBar(QWidget *);
+    ~ToolBar();
+
+    void paintEvent(QPaintEvent *)
+    {
+        QPainter p(this);
+        p.setPen(QColor(211, 211, 211));
+        p.setRenderHint(QPainter::Antialiasing, true);
+        p.drawRoundedRect(0, 0, width(), height(), 5, 5);
+    }
+
+private:
+    void initSize();
+    void initLayout();
+    void initElements();
+    void initialize();
+
+signals:
+     void sendPaintingSignal() const;
+
+public slots:
+    void emitPaintingSignal();
+
+private:
+    QHBoxLayout *hlayout;
+    QLineEdit *insertLine;
+    QLineEdit *removeLine;
+    QLineEdit *searchLine;
+    QPushButton *insertButton;
+    QPushButton *removeButton;
+    QPushButton *searchButton;
+};
 
 #endif // UI_WINDOW_H
