@@ -1,8 +1,8 @@
 #include "ui_window.h"
 #include <QtWidgets>
 
-const int BASE_HEIGHT = 512;
-const int BASE_WIDTH = 1280;
+const int BASE_HEIGHT = 600;
+const int BASE_WIDTH = 1200;
 const int MAX_TOOLBAR_HEIGHT = 48;
 const int MAX_LINE_EDIT_LENGTH = 128;
 const int MAX_LINE_INPUT_LENGTH = 4;
@@ -29,20 +29,16 @@ MainWindow::MainWindow()
     centralWidget->setLayout(vlayout);
     createStatusBar();
 
-    /*
-    QLabel *label = new QLabel(mainWidget);
-    label->setPixmap(QPixmap(":/img/node.png"));
-   // label->setGeometry(BASE_WIDTH >> 1, BASE_HEIGHT >> 4, 64, 64);
-    label->setGeometry(-0.5, -0.5, 64, 64);
-*/
-   /* QLabel *line = new QLabel(mainWidget);
-    QMatrix matrix;
-    matrix.rotate(135);
-    line->setPixmap(QPixmap(":/img/line.png").transformed(matrix, Qt::SmoothTransformation));
-  //  line->setGeometry((BASE_WIDTH >> 1) + 32, (BASE_HEIGHT >> 4) + 32, 200, 200);
-    line->setGeometry((BASE_WIDTH >> 1) + 32, (BASE_HEIGHT >> 4), 200, 200);*/
+    UiNode *label = new UiNode(workspace, 100, 100);
+   // label->setGeometry(100, 100, 32, 32);
 
-    connect(toolbar, &ToolBar::sendPaintingSignal, workspace, &WorksWidget::changeStatus);
+    QPropertyAnimation *p = new QPropertyAnimation(label, "pos");
+    p->setDuration(10000);
+    p->setStartValue(QPoint(100, 100));
+    p->setEndValue(QPoint(500, 500));
+    p->start();
+
+    connect(toolbar, SIGNAL(sendPaintingSignal()), workspace, SLOT(changeStatus()));
 
 }
 
@@ -100,18 +96,25 @@ WorksWidget::~WorksWidget()
 void WorksWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    foreach (Shape *e, list) {
-        e->paint(painter);
+    foreach (Edge *edge, edges) {
+        edge->paint(painter);
     }
 }
 
 void WorksWidget::changeStatus()
 {
     i++;
-    Shape *shape = NULL;
-    shape = new Point(i, i, NoColor, "9527");
-    list << shape;
+    Edge *edge = NULL;
+    edge = new Edge(i, i, i + 100, i + 100);
+    edges << edge;
     update();
+    /*
+    QPropertyAnimation a(shape, "geometry");
+    a.setDuration(10000);
+    a.setStartValue(QRect(0, 0, 100, 100));
+    a.setEndValue(QRect(100, 100, 100, 100));
+    a.start();
+    */
 }
 
 ToolBar::ToolBar()

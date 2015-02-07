@@ -1,6 +1,8 @@
 #ifndef UI_WINDOW_H
 #define UI_WINDOW_H
 
+#include <QtGui>
+#include <QObject>
 #include <cstdio>
 #include <QList>
 #include <QWidget>
@@ -18,7 +20,9 @@
 #include <QGridLayout>
 #include <QScrollArea>
 #include <QAbstractScrollArea>
-#include "ui_tree_element.h"
+#include <QPropertyAnimation>
+#include "ui_tree_edge.h"
+#include "ui_tree_node.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -88,7 +92,8 @@ public slots:
     void changeStatus();
 
 private:
-    QList <Shape *> list;
+    QList <Edge *> edges;
+    QList <UiNode *> points;
     static int i; //for testing
 };
 
