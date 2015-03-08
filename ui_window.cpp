@@ -6,6 +6,7 @@ const int BASE_WIDTH = 1200;
 const int MAX_TOOLBAR_HEIGHT = 48;
 const int MAX_LINE_EDIT_LENGTH = 128;
 const int MAX_LINE_INPUT_LENGTH = 4;
+const int MIN_LINE_INPUT_LENGTH = 1;
 
 int WorksWidget::i = 0;
 
@@ -29,16 +30,16 @@ MainWindow::MainWindow()
     centralWidget->setLayout(vlayout);
     createStatusBar();
 
+    /*
     UiNode *label = new UiNode(workspace, 100, 100);
-   // label->setGeometry(100, 100, 32, 32);
 
     QPropertyAnimation *p = new QPropertyAnimation(label, "pos");
     p->setDuration(10000);
     p->setStartValue(QPoint(100, 100));
     p->setEndValue(QPoint(500, 500));
     p->start();
-
-    connect(toolbar, SIGNAL(sendPaintingSignal()), workspace, SLOT(changeStatus()));
+    */
+    connect(toolbar, SIGNAL(sendPaintingSignal(const QString &)), workspace, SLOT(changeStatus(const QString &)));
 
 }
 
@@ -101,14 +102,16 @@ void WorksWidget::paintEvent(QPaintEvent *)
     }
 }
 
-void WorksWidget::changeStatus()
+void WorksWidget::changeStatus(const QString &str)
 {
+    label = new UiNode(this, 100, 100, str);
+    label->show();
+    /*
     i++;
     Edge *edge = NULL;
     edge = new Edge(i, i, i + 100, i + 100);
     edges << edge;
     update();
-    /*
     QPropertyAnimation a(shape, "geometry");
     a.setDuration(10000);
     a.setStartValue(QRect(0, 0, 100, 100));
@@ -160,9 +163,9 @@ void ToolBar::initElements()
     insertLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
     removeLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
     searchLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
-    insertLine->setMaxLength(MAX_LINE_INPUT_LENGTH);
-    removeLine->setMaxLength(MAX_LINE_INPUT_LENGTH);
-    searchLine->setMaxLength(MAX_LINE_INPUT_LENGTH);
+    insertLine->setInputMask(QString("9999"));
+    removeLine->setInputMask(QString("9999"));
+    searchLine->setInputMask(QString("9999"));
     insertLine->setPlaceholderText(tr("input..."));
     removeLine->setPlaceholderText(tr("input..."));
     searchLine->setPlaceholderText(tr("input..."));
@@ -196,6 +199,7 @@ void ToolBar::initialize()
 
 void ToolBar::emitPaintingSignal()
 {
-    emit sendPaintingSignal();
+    QString tmp = insertLine->text();
+    emit sendPaintingSignal(tmp);
 }
 

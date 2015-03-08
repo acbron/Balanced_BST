@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QPainter>
 #include <QWidget>
+#include <QString>
 
 extern const int FIXED_WIDTH;
 extern const int FIXED_HEIGHT;
@@ -15,8 +16,12 @@ private:
     UiNode(QWidget *);
 
 public:
-    UiNode(QWidget *, int, int);
+    UiNode(QWidget *, int, int, const QString &);
     ~UiNode();
+
+public:
+    int getX();
+    int getY();
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -24,6 +29,7 @@ protected:
 private:
     int x;
     int y;
+    QString word;
 };
 
 #endif // UI_TREE_NODE_H

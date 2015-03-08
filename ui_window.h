@@ -5,6 +5,7 @@
 #include <QObject>
 #include <cstdio>
 #include <QList>
+#include <QString>
 #include <QWidget>
 #include <QMainWindow>
 #include <QAction>
@@ -23,6 +24,7 @@
 #include <QPropertyAnimation>
 #include "ui_tree_edge.h"
 #include "ui_tree_node.h"
+#include "binary_search_tree.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -35,6 +37,7 @@ extern const int BASE_WIDTH;
 extern const int MAX_TOOLBAR_HEIGHT;
 extern const int MAX_LINE_EDIT_LENGTH;
 extern const int MAX_LINE_INPUT_LENGTH;
+extern const int MIN_LINE_INPUT_LENGTH;
 
 class WorksWidget;
 class ToolBar;
@@ -89,12 +92,16 @@ protected:
     void paintEvent(QPaintEvent *);
 
 public slots:
-    void changeStatus();
+    void changeStatus(const QString &);
 
 private:
     QList <Edge *> edges;
     QList <UiNode *> points;
+    UiNode *label;
     static int i; //for testing
+
+private:
+    BinarySearchTree *bst;
 };
 
 
@@ -126,7 +133,7 @@ private:
     void initialize();
 
 signals:
-     void sendPaintingSignal() const;
+     void sendPaintingSignal(const QString &) const;
 
 public slots:
     void emitPaintingSignal();
