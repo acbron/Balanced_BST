@@ -39,7 +39,7 @@ MainWindow::MainWindow()
     p->setEndValue(QPoint(500, 500));
     p->start();
     */
-    connect(toolbar, SIGNAL(sendPaintingSignal(const QString &)), workspace, SLOT(changeStatus(const QString &)));
+    connect(toolbar, SIGNAL(sendPaintingSignal(const QString &)), workspace, SLOT(insertSlot(const QString &)));
 
 }
 
@@ -79,6 +79,10 @@ void MainWindow::createStatusBar()
     statusBar()->showMessage(tr("Status Bar"));
 }
 
+/*
+ * WorksWidget
+ */
+
 WorksWidget::WorksWidget()
 {
 
@@ -87,11 +91,17 @@ WorksWidget::WorksWidget()
 WorksWidget::WorksWidget(QWidget *parent)
 {
     setParent(parent);
+    if (bst == nullptr) {
+        delete bst;
+        bst = nullptr;
+    }
+    bst = new BinarySearchTree();
 }
 
 WorksWidget::~WorksWidget()
 {
-
+    delete bst;
+    bst = nullptr;
 }
 
 void WorksWidget::paintEvent(QPaintEvent *)
@@ -102,11 +112,31 @@ void WorksWidget::paintEvent(QPaintEvent *)
     }
 }
 
+void WorksWidget::insertSlot(const QString &str)
+{
+    int value = str.toInt();
+    label[value] = new UiNode(this, 100, 100, str);
+    label[value]->setGeometry(label[value]->getX(), label[value]->getY(), FIXED_WIDTH, FIXED_HEIGHT);
+    label[value]->show();
+}
+
+void WorksWidget::removeSlot(const QString &str)
+{
+
+}
+
+void WorksWidget::searchSlot(const QString &str)
+{
+
+}
+
 void WorksWidget::changeStatus(const QString &str)
 {
-    label = new UiNode(this, 100, 100, str);
-    label->show();
     /*
+    i++;
+    label = new UiNode(this, 100 * i, 100 * i, str);
+    label->setGeometry(label->getX(), label->getY(), FIXED_WIDTH, FIXED_HEIGHT);
+    label->show();
     i++;
     Edge *edge = NULL;
     edge = new Edge(i, i, i + 100, i + 100);
@@ -120,6 +150,9 @@ void WorksWidget::changeStatus(const QString &str)
     */
 }
 
+/*
+ * ToolBar
+ */
 ToolBar::ToolBar()
 {
 

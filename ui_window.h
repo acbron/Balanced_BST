@@ -24,6 +24,7 @@
 #include <QPropertyAnimation>
 #include "ui_tree_edge.h"
 #include "ui_tree_node.h"
+#include "tree_base_class.h"
 #include "binary_search_tree.h"
 
 QT_BEGIN_NAMESPACE
@@ -38,6 +39,8 @@ extern const int MAX_TOOLBAR_HEIGHT;
 extern const int MAX_LINE_EDIT_LENGTH;
 extern const int MAX_LINE_INPUT_LENGTH;
 extern const int MIN_LINE_INPUT_LENGTH;
+
+const int MAX_LABEL_NUM = 10000;
 
 class WorksWidget;
 class ToolBar;
@@ -91,17 +94,25 @@ public:
 protected:
     void paintEvent(QPaintEvent *);
 
+signals:
+    void insertSignal(const QString &) const;
+    void removeSignal(const QString &) const;
+    void searchSignal(const QString &) const;
+
 public slots:
+    void insertSlot(const QString &);
+    void removeSlot(const QString &);
+    void searchSlot(const QString &);
     void changeStatus(const QString &);
 
 private:
     QList <Edge *> edges;
     QList <UiNode *> points;
-    UiNode *label;
+    UiNode *label[MAX_LABEL_NUM];
     static int i; //for testing
 
 private:
-    BinarySearchTree *bst;
+    Tree *bst;
 };
 
 

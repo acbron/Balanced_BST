@@ -105,6 +105,7 @@ bool BinarySearchTree::search(int w)
     return false;
 }
 
+/*
 void BinarySearchTree::freeMemory(TreeNode *curr)
 {
     if (curr == nullptr)
@@ -116,3 +117,4 @@ void BinarySearchTree::freeMemory(TreeNode *curr)
     delete curr;
     curr = nullptr;
 }
+*/

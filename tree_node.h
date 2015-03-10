@@ -1,11 +1,17 @@
 #ifndef TREE_NODE_H
 #define TREE_NODE_H
 
+#include <queue>
+
 /*
  * tree node's color
  */
 enum Color {
     normal, red, black
+};
+
+enum Action {
+    move_left, move_right
 };
 
 struct TreeNode {
@@ -57,6 +63,7 @@ struct TreeNode {
     Color color;
     TreeNode *leftChild;
     TreeNode *rightChild;
+    std::queue <Action> movement;
 };
 
 #endif // TREE_NODE_H
