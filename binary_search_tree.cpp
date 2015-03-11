@@ -15,8 +15,13 @@ void BinarySearchTree::insert(int w)
     TreeNode *prev = nullptr;
     TreeNode *curr = root;
 
+    TreeNode *new_node = new TreeNode(w);
+    movement.push(std::make_pair(w, QPoint(new_node->x, new_node->y)));
+
     while (curr != nullptr) {
         prev = curr;
+
+        movement.push(std::make_pair(w, QPoint(curr->x, curr->y)));
 
         if (curr->weight > w)
             curr = curr->leftChild;
@@ -24,9 +29,8 @@ void BinarySearchTree::insert(int w)
             curr = curr->rightChild;
     }
 
-    TreeNode *new_node = new TreeNode(w);
-
     if (prev == nullptr) {
+        movement.push(std::make_pair(w, QPoint(INIT_X, INIT_Y)));
         root = new_node;
     } else {
         if (prev->weight > w)

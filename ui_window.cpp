@@ -1,5 +1,4 @@
 #include "ui_window.h"
-#include <QtWidgets>
 
 const int BASE_HEIGHT = 600;
 const int BASE_WIDTH = 1200;
@@ -115,9 +114,14 @@ void WorksWidget::paintEvent(QPaintEvent *)
 void WorksWidget::insertSlot(const QString &str)
 {
     int value = str.toInt();
-    label[value] = new UiNode(this, 100, 100, str);
+    bst->insert(value);
+    emit insertSignal(str);
+    /*
+    int value = str.toInt();
+    label[value] = new UiNode(this, 100 * i, 100 * i, str);
     label[value]->setGeometry(label[value]->getX(), label[value]->getY(), FIXED_WIDTH, FIXED_HEIGHT);
     label[value]->show();
+    */
 }
 
 void WorksWidget::removeSlot(const QString &str)

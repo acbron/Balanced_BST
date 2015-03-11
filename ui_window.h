@@ -7,6 +7,7 @@
 #include <QList>
 #include <QString>
 #include <QWidget>
+#include <QtWidgets>
 #include <QMainWindow>
 #include <QAction>
 #include <QMenu>
@@ -103,6 +104,7 @@ public slots:
     void insertSlot(const QString &);
     void removeSlot(const QString &);
     void searchSlot(const QString &);
+    void animationSlot(const QString &);
     void changeStatus(const QString &);
 
 private:
