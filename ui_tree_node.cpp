@@ -28,3 +28,13 @@ int UiNode::getY()
 {
     return y;
 }
+
+void UiNode::setX(int _x)
+{
+    x = _x;
+}
+
+void UiNode::setY(int _y)
+{
+    y = _y;
+}

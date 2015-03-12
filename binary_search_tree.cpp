@@ -31,6 +31,8 @@ void BinarySearchTree::insert(int w)
 
     if (prev == nullptr) {
         movement.push(std::make_pair(w, QPoint(INIT_X, INIT_Y)));
+        new_node->x = INIT_X;
+        new_node->y = INIT_Y;
         root = new_node;
     } else {
         if (prev->weight > w)
@@ -38,6 +40,9 @@ void BinarySearchTree::insert(int w)
         else
             prev->rightChild = new_node;
     }
+
+    movement.push(std::make_pair(w, QPoint(new_node->x, new_node->y + VERTICAL_OFFSET)));
+    new_node->y += VERTICAL_OFFSET;
 }
 
 void BinarySearchTree::remove(int w)

@@ -22,6 +22,8 @@ public:
 public:
     int getX();
     int getY();
+    void setX(int);
+    void setY(int);
 
 protected:
     void paintEvent(QPaintEvent *);

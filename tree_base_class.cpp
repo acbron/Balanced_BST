@@ -1,7 +1,8 @@
 #include "tree_base_class.h"
 
-const int INIT_X = 600;
-const int INIT_Y = 300;
+const int INIT_X = 568;
+const int INIT_Y = 0;
+const int VERTICAL_OFFSET = 32;
 
 Tree::Tree() {
 

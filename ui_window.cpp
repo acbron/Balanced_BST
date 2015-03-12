@@ -95,6 +95,7 @@ WorksWidget::WorksWidget(QWidget *parent)
         bst = nullptr;
     }
     bst = new BinarySearchTree();
+    connect(this, SIGNAL(insertSignal()), this, SLOT(animationSlot()));
 }
 
 WorksWidget::~WorksWidget()
@@ -115,7 +116,7 @@ void WorksWidget::insertSlot(const QString &str)
 {
     int value = str.toInt();
     bst->insert(value);
-    emit insertSignal(str);
+    emit insertSignal();
     /*
     int value = str.toInt();
     label[value] = new UiNode(this, 100 * i, 100 * i, str);
@@ -132,6 +133,31 @@ void WorksWidget::removeSlot(const QString &str)
 void WorksWidget::searchSlot(const QString &str)
 {
 
+}
+
+void WorksWidget::animationSlot()
+{
+    while (!bst->movement.empty()) {
+        pair < int, QPoint > tmp = bst->movement.front();
+        bst->movement.pop();
+        int value = tmp.first;
+        QPoint pos = tmp.second;
+        QString str;
+        str.setNum(value);
+        if (label[value] == nullptr) {
+            label[value] = new UiNode(this, pos.x(), pos.y(), str);
+            label[value]->setGeometry(pos.x(), pos.y(), FIXED_WIDTH, FIXED_HEIGHT);
+            label[value]->show();
+        } else {
+            QPropertyAnimation *animate = new QPropertyAnimation(label[value], "pos");
+            animate->setDuration(1000);
+            animate->setStartValue(QPoint(label[value]->getX(), label[value]->getY()));
+            animate->setEndValue(QPoint(pos.x(), pos.y()));
+            animate->start();
+            label[value]->setX(pos.x());
+            label[value]->setY(pos.y());
+        }
+    }
 }
 
 void WorksWidget::changeStatus(const QString &str)

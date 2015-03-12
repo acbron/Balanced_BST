@@ -10,11 +10,11 @@ enum Color {
 
 struct TreeNode {
 
-    TreeNode() : x(0), y(0), weight(0),height(0),color(normal),leftChild(nullptr),rightChild(nullptr) {
+    TreeNode() : weight(0),height(0),x(0),y(0),color(normal),leftChild(nullptr),rightChild(nullptr) {
         // no content
     }
 
-    TreeNode(int w) : x(0), y(0), weight(w),height(0),color(normal),leftChild(nullptr),rightChild(nullptr) {
+    TreeNode(int w) : weight(w),height(0),x(0),y(0),color(normal),leftChild(nullptr),rightChild(nullptr) {
         // no content
     }
 
@@ -52,10 +52,10 @@ struct TreeNode {
         return *this;
     }
 
-    int x;
-    int y;
     int weight;
     int height;
+    int x;
+    int y;
     Color color;
     TreeNode *leftChild;
     TreeNode *rightChild;

@@ -27,12 +27,15 @@
 #include "ui_tree_node.h"
 #include "tree_base_class.h"
 #include "binary_search_tree.h"
+#include <queue>
 
 QT_BEGIN_NAMESPACE
 class QAction;
 class QMenu;
 class QPlainTextEdit;
 QT_END_NAMESPACE
+
+using namespace std;
 
 extern const int BASE_HEIGHT;
 extern const int BASE_WIDTH;
@@ -96,15 +99,15 @@ protected:
     void paintEvent(QPaintEvent *);
 
 signals:
-    void insertSignal(const QString &) const;
-    void removeSignal(const QString &) const;
-    void searchSignal(const QString &) const;
+    void insertSignal() const;
+    void removeSignal() const;
+    void searchSignal() const;
 
 public slots:
     void insertSlot(const QString &);
     void removeSlot(const QString &);
     void searchSlot(const QString &);
-    void animationSlot(const QString &);
+    void animationSlot();
     void changeStatus(const QString &);
 
 private:

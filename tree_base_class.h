@@ -7,6 +7,7 @@
 
 extern const int INIT_X;
 extern const int INIT_Y;
+extern const int VERTICAL_OFFSET;
 
 class Tree {
 
@@ -27,7 +28,7 @@ protected:
     void freeMemory(TreeNode *);
 
 public:
-    std::queue < std::pair<int, const QPoint &> > movement;
+    std::queue < std::pair<int, QPoint> > movement;
 };
 
 #endif // TREE_BASE_CLASS_H
