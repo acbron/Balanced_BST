@@ -137,6 +137,7 @@ void WorksWidget::searchSlot(const QString &str)
 
 void WorksWidget::animationSlot()
 {
+    QSequentialAnimationGroup *group = new QSequentialAnimationGroup;
     while (!bst->movement.empty()) {
         pair < int, QPoint > tmp = bst->movement.front();
         bst->movement.pop();
@@ -145,19 +146,19 @@ void WorksWidget::animationSlot()
         QString str;
         str.setNum(value);
         if (label[value] == nullptr) {
-            label[value] = new UiNode(this, pos.x(), pos.y(), str);
+            label[value] = new UiNode(this, str);
             label[value]->setGeometry(pos.x(), pos.y(), FIXED_WIDTH, FIXED_HEIGHT);
             label[value]->show();
         } else {
             QPropertyAnimation *animate = new QPropertyAnimation(label[value], "pos");
             animate->setDuration(1000);
-            animate->setStartValue(QPoint(label[value]->getX(), label[value]->getY()));
+            animate->setStartValue(QPoint(label[value]->x(), label[value]->y()));
             animate->setEndValue(QPoint(pos.x(), pos.y()));
-            animate->start();
-            label[value]->setX(pos.x());
-            label[value]->setY(pos.y());
+            label[value]->setGeometry(pos.x(), pos.y(), FIXED_WIDTH, FIXED_HEIGHT);
+            group->addAnimation(animate);
         }
     }
+    group->start();
 }
 
 void WorksWidget::changeStatus(const QString &str)

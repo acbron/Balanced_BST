@@ -16,21 +16,13 @@ private:
     UiNode(QWidget *);
 
 public:
-    UiNode(QWidget *, int, int, const QString &);
+    UiNode(QWidget *, const QString &);
     ~UiNode();
-
-public:
-    int getX();
-    int getY();
-    void setX(int);
-    void setY(int);
 
 protected:
     void paintEvent(QPaintEvent *);
 
 private:
-    int x;
-    int y;
     QString word;
 };
 

@@ -4,10 +4,13 @@
 #include <queue>
 #include <QPoint>
 #include "tree_node.h"
+#include <QDebug>
 
 extern const int INIT_X;
 extern const int INIT_Y;
 extern const int VERTICAL_OFFSET;
+extern const int ADD_X;
+extern const int ADD_Y;
 
 class Tree {
 
