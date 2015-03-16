@@ -139,22 +139,40 @@ void WorksWidget::animationSlot()
 {
     QSequentialAnimationGroup *group = new QSequentialAnimationGroup;
     while (!bst->movement.empty()) {
-        pair < int, QPoint > tmp = bst->movement.front();
+        ActionTuple tmp = bst->movement.front();
         bst->movement.pop();
-        int value = tmp.first;
-        QPoint pos = tmp.second;
+        int value = tmp.value;
+        int x = tmp.x;
+        int y = tmp.y;
+        ActionType type = tmp.type;
         QString str;
         str.setNum(value);
         if (label[value] == nullptr) {
             label[value] = new UiNode(this, str);
-            label[value]->setGeometry(pos.x(), pos.y(), FIXED_WIDTH, FIXED_HEIGHT);
+            label[value]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
             label[value]->show();
         } else {
             QPropertyAnimation *animate = new QPropertyAnimation(label[value], "pos");
             animate->setDuration(1000);
-            animate->setStartValue(QPoint(label[value]->x(), label[value]->y()));
+            /* animate->setStartValue(QPoint(label[value]->x(), label[value]->y()));
             animate->setEndValue(QPoint(pos.x(), pos.y()));
-            label[value]->setGeometry(pos.x(), pos.y(), FIXED_WIDTH, FIXED_HEIGHT);
+            animate->setEasingCurve(QEasingCurve::InCirc);*/
+            if (type == no_type) {
+                animate->setStartValue(QPoint(label[value]->x(), label[value]->y()));
+                animate->setEndValue(QPoint(x, y));
+            } else {
+                QPainterPath path;
+                path.moveTo(label[value]->x(), label[value]->y());
+
+                if (type == move_left)
+                    path.quadTo(label[value]->x() - 64, label[value]->y(), x, y);
+                else
+                    path.quadTo(label[value]->x() + 64, label[value]->y(), x, y);
+                for (double i = 0; i < 1; i += 0.1)
+                    animate->setKeyValueAt(i, path.pointAtPercent(i));
+                animate->setEndValue(QPoint(x, y));
+            }
+            label[value]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
             group->addAnimation(animate);
         }
     }
@@ -249,7 +267,7 @@ void ToolBar::initialize()
     initSize();
     initElements();
     initLayout();
-/*
+    /*
  * Set Background
  *
     QPixmap pixmap = QPixmap(":/img/ToolBar.png").scaled(this->size());

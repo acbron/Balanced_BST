@@ -7,7 +7,7 @@ UiNode::UiNode(QWidget *parent) : QLabel(parent) {}
 
 UiNode::UiNode(QWidget *parent, const QString &w) : QLabel(parent), word(w)
 {
-    setPixmap(QPixmap(":/img/node.png"));
+    setPixmap(QPixmap(":/img/Green.png"));
 }
 
 UiNode::~UiNode() {}
