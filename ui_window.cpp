@@ -7,8 +7,6 @@ const int MAX_LINE_EDIT_LENGTH = 128;
 const int MAX_LINE_INPUT_LENGTH = 4;
 const int MIN_LINE_INPUT_LENGTH = 1;
 
-int WorksWidget::i = 0;
-
 MainWindow::MainWindow()
 {
     createActions();
@@ -107,7 +105,7 @@ WorksWidget::~WorksWidget()
 void WorksWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    foreach (Edge *edge, edges) {
+    foreach (Edge *edge, bst->edges) {
         edge->paint(painter);
     }
 }
@@ -137,46 +135,84 @@ void WorksWidget::searchSlot(const QString &str)
 
 void WorksWidget::animationSlot()
 {
-    QSequentialAnimationGroup *group = new QSequentialAnimationGroup;
-    while (!bst->movement.empty()) {
-        ActionTuple tmp = bst->movement.front();
-        bst->movement.pop();
+    QSequentialAnimationGroup *sGroup = new QSequentialAnimationGroup;
+    QParallelAnimationGroup *pGroup = new QParallelAnimationGroup;
+
+    sequentialAnimation(sGroup);
+
+    parallelAnimation(pGroup);
+
+    sGroup->addAnimation(pGroup);
+    sGroup->start();
+    update();
+}
+
+void WorksWidget::sequentialAnimation(QSequentialAnimationGroup *sag)
+{
+    while (!bst->sequentialMovement.empty()) {
+        ActionTuple tmp = bst->sequentialMovement.front();
+        bst->sequentialMovement.pop();
+
         int value = tmp.value;
+        int index = tmp.index;
         int x = tmp.x;
         int y = tmp.y;
         ActionType type = tmp.type;
         QString str;
         str.setNum(value);
-        if (label[value] == nullptr) {
-            label[value] = new UiNode(this, str);
-            label[value]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
-            label[value]->show();
+
+        if (label[index] == nullptr) {
+            label[index] = new UiNode(this, str);
+            label[index]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
+            label[index]->show();
         } else {
-            QPropertyAnimation *animate = new QPropertyAnimation(label[value], "pos");
+            QPropertyAnimation *animate = new QPropertyAnimation(label[index], "pos");
             animate->setDuration(1000);
-            /* animate->setStartValue(QPoint(label[value]->x(), label[value]->y()));
-            animate->setEndValue(QPoint(pos.x(), pos.y()));
-            animate->setEasingCurve(QEasingCurve::InCirc);*/
+
             if (type == no_type) {
-                animate->setStartValue(QPoint(label[value]->x(), label[value]->y()));
+                animate->setStartValue(QPoint(label[index]->x(), label[index]->y()));
                 animate->setEndValue(QPoint(x, y));
             } else {
                 QPainterPath path;
-                path.moveTo(label[value]->x(), label[value]->y());
+                path.moveTo(label[index]->x(), label[index]->y());
 
                 if (type == move_left)
-                    path.quadTo(label[value]->x() - 64, label[value]->y(), x, y);
+                    path.quadTo(label[index]->x() - 64, label[index]->y(), x, y);
                 else
-                    path.quadTo(label[value]->x() + 64, label[value]->y(), x, y);
+                    path.quadTo(label[index]->x() + 64, label[index]->y(), x, y);
+
                 for (double i = 0; i < 1; i += 0.1)
                     animate->setKeyValueAt(i, path.pointAtPercent(i));
+
                 animate->setEndValue(QPoint(x, y));
             }
-            label[value]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
-            group->addAnimation(animate);
+            label[index]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
+
+            sag->addAnimation(animate);
         }
     }
-    group->start();
+}
+
+void WorksWidget::parallelAnimation(QParallelAnimationGroup *pag)
+{
+    while (!bst->parallelMovement.empty()) {
+        ActionTuple tmp = bst->parallelMovement.front();
+        bst->parallelMovement.pop();
+
+        int index = tmp.index;
+        int x = tmp.x;
+        int y = tmp.y;
+
+        QPropertyAnimation *animate = new QPropertyAnimation(label[index], "pos");
+        animate->setDuration(1000);
+
+        animate->setStartValue(QPoint(label[index]->x(), label[index]->y()));
+        animate->setEndValue(QPoint(x, y));
+
+        label[index]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
+
+        pag->addAnimation(animate);
+    }
 }
 
 void WorksWidget::changeStatus(const QString &str)

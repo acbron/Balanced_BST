@@ -1,14 +1,17 @@
 #include "ui_tree_edge.h"
+#include "ui_window.h"
 
-int BASE_EDGE_LEN = 16;
-int MOVE_LEN = 16;
+const int LEFT_X_OFFSET = 6;
+const int RIGHT_X_OFFSET = 26;
+const int MIDDLE_X_OFFSET = 16;
+const int Y_OFFSET = 30;
 
 Edge::Edge() {}
 Edge::Edge(const Edge &) {}
 Edge::~Edge() {}
 
-Edge::Edge(int start_x, int start_y, int end_x, int end_y) :
-    startX(start_x), startY(start_y), endX(end_x), endY(end_y)
+Edge::Edge(int start_x, int start_y, int end_x, int end_y, int _index) :
+    startX(start_x), startY(start_y), endX(end_x), endY(end_y), index(_index), dir(left_edge)
 {
 
 }
@@ -25,9 +28,39 @@ void Edge::setEndCoodinate(int x, int y)
     endY = y;
 }
 
+void Edge::setDirection(EdgeDirection directon)
+{
+    dir = directon;
+}
+
+int Edge::getStartX() const
+{
+    return startX;
+}
+
+int Edge::getStartY() const
+{
+    return startY;
+}
+
+int Edge::getEndX() const
+{
+    return endX;
+}
+
+int Edge::getEndY() const
+{
+    return endY;
+}
+
+EdgeDirection Edge::getDirection() const
+{
+    return dir;
+}
+
 void Edge::paint(QPainter &painter)
 {
-    painter.setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
+    painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawLine(startX, startY, endX, endY);
 }

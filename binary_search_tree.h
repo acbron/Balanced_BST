@@ -20,6 +20,8 @@ public:
 
 private:
     TreeNode *root;
+    static int node_index;
+    static int edge_index;
 };
 
 #endif // BINARY_SEARCH_TREE

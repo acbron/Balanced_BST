@@ -10,11 +10,11 @@ enum Color {
 
 struct TreeNode {
 
-    TreeNode() : weight(0),height(0),x(0),y(0),color(normal),leftChild(nullptr),rightChild(nullptr) {
+    TreeNode() : weight(0),id(0),height(0),x(0),y(0),color(normal),leftChild(nullptr),rightChild(nullptr) {
         // no content
     }
 
-    TreeNode(int w) : weight(w),height(0),x(0),y(0),color(normal),leftChild(nullptr),rightChild(nullptr) {
+    TreeNode(int w, int _id) : weight(w),id(_id),height(0),x(0),y(0),color(normal),leftChild(nullptr),rightChild(nullptr) {
         // no content
     }
 
@@ -53,6 +53,7 @@ struct TreeNode {
     }
 
     int weight;
+    int id;
     int height;
     int x;
     int y;
@@ -60,5 +61,6 @@ struct TreeNode {
     TreeNode *leftChild;
     TreeNode *rightChild;
 };
+
 
 #endif // TREE_NODE_H

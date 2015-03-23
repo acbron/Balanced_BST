@@ -1,6 +1,9 @@
 #include "binary_search_tree.h"
 #include "ui_window.h"
 
+int BinarySearchTree::node_index = 0;
+int BinarySearchTree::edge_index = 0;
+
 BinarySearchTree::BinarySearchTree() : root(nullptr)
 {
     // no content
@@ -16,17 +19,21 @@ void BinarySearchTree::insert(int w)
     TreeNode *prev = nullptr;
     TreeNode *curr = root;
 
-    TreeNode *new_node = new TreeNode(w);
-    movement.push(ActionTuple(w, no_type, new_node->x, new_node->y));
+    TreeNode *new_node = new TreeNode(w, ++node_index);
+
+    sequentialMovement.push(ActionTuple(w, node_index, no_type, new_node->x, new_node->y));
 
     while (curr != nullptr) {
         if (prev == nullptr) {
-            movement.push(ActionTuple(w, no_type, curr->x, curr->y));
+            sequentialMovement.push(ActionTuple(w, node_index, no_type, curr->x, curr->y));
         } else {
-            if (prev->leftChild == curr)
-                movement.push(ActionTuple(w, move_left, curr->x, curr->y));
-            else
-                movement.push(ActionTuple(w, move_right, curr->x, curr->y));
+            if (prev->leftChild == curr) {
+                sequentialMovement.push(ActionTuple(w, node_index, move_left, curr->x, curr->y));
+                node_adjust->addLocateLeft(curr);
+            } else {
+                sequentialMovement.push(ActionTuple(w, node_index, move_right, curr->x, curr->y));
+                node_adjust->addLocateRight(curr);
+            }
         }
 
         prev = curr;
@@ -38,7 +45,7 @@ void BinarySearchTree::insert(int w)
     }
 
     if (prev == nullptr) {
-        movement.push(ActionTuple(w, no_type, INIT_X, INIT_Y));
+        sequentialMovement.push(ActionTuple(w, node_index, no_type, INIT_X, INIT_Y));
         new_node->x = INIT_X;
         new_node->y = INIT_Y;
         root = new_node;
@@ -46,16 +53,19 @@ void BinarySearchTree::insert(int w)
         if (prev->weight > w) {
             new_node->x = prev->x - ADD_X;
             new_node->y = prev->y + ADD_Y;
-            movement.push(ActionTuple(w, move_left, new_node->x, new_node->y));
+            sequentialMovement.push(ActionTuple(w, node_index, move_left, new_node->x, new_node->y));
             prev->leftChild = new_node;
          } else {
             new_node->x = prev->x + ADD_X;
             new_node->y = prev->y + ADD_Y;
-            movement.push(ActionTuple(w, move_right, new_node->x, new_node->y));
+            sequentialMovement.push(ActionTuple(w, node_index, move_right, new_node->x, new_node->y));
             prev->rightChild = new_node;
         }
+
+        addEdge(prev, new_node, ++edge_index);
+        node_adjust->adjustNodePosition(prev, new_node, parallelMovement);
     }
-    movement.push(ActionTuple(w, no_type, new_node->x, new_node->y + VERTICAL_OFFSET));
+    sequentialMovement.push(ActionTuple(w, node_index, no_type, new_node->x, new_node->y + VERTICAL_OFFSET));
 }
 
 void BinarySearchTree::remove(int w)

@@ -44,7 +44,7 @@ extern const int MAX_LINE_EDIT_LENGTH;
 extern const int MAX_LINE_INPUT_LENGTH;
 extern const int MIN_LINE_INPUT_LENGTH;
 
-const int MAX_LABEL_NUM = 10000;
+const int MAX_LABEL_NUM = 100000;
 
 class WorksWidget;
 class ToolBar;
@@ -111,10 +111,11 @@ public slots:
     void changeStatus(const QString &);
 
 private:
-    QList <Edge *> edges;
-    QList <UiNode *> points;
+    void sequentialAnimation(QSequentialAnimationGroup *);
+    void parallelAnimation(QParallelAnimationGroup *);
+
+private:
     UiNode *label[MAX_LABEL_NUM];
-    static int i; //for testing
 
 private:
     Tree *bst;
