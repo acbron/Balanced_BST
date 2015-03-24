@@ -108,6 +108,7 @@ public slots:
     void removeSlot(const QString &);
     void searchSlot(const QString &);
     void animationSlot();
+    void edgeUpdateSlot();
     void changeStatus(const QString &);
 
 private:

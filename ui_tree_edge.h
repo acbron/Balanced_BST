@@ -22,7 +22,7 @@ private:
     Edge(const Edge &);
 
 public:
-    Edge(int, int, int, int, int);
+    Edge(int, int, int, int, int, int);
     ~Edge();
     void paint(QPainter &);
     void setStartCoodinate(int, int);
@@ -33,13 +33,16 @@ public:
     int getEndX() const;
     int getEndY() const;
     EdgeDirection getDirection() const;
+    int getStartIndex() const;
+    int getEndIndex() const;
 
 private:
     int startX;
     int startY;
     int endX;
     int endY;
-    int index;
+    int startLabelIndex;
+    int endLabelIndex;
     EdgeDirection dir;
 };
 

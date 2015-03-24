@@ -2,7 +2,6 @@
 #include "ui_window.h"
 
 int BinarySearchTree::node_index = 0;
-int BinarySearchTree::edge_index = 0;
 
 BinarySearchTree::BinarySearchTree() : root(nullptr)
 {
@@ -25,13 +24,13 @@ void BinarySearchTree::insert(int w)
 
     while (curr != nullptr) {
         if (prev == nullptr) {
-            sequentialMovement.push(ActionTuple(w, node_index, no_type, curr->x, curr->y));
+            sequentialMovement.push(ActionTuple(w, node_index, no_type, curr->x, curr->y - VERTICAL_OFFSET));
         } else {
             if (prev->leftChild == curr) {
-                sequentialMovement.push(ActionTuple(w, node_index, move_left, curr->x, curr->y));
+                sequentialMovement.push(ActionTuple(w, node_index, move_left, curr->x, curr->y - VERTICAL_OFFSET));
                 node_adjust->addLocateLeft(curr);
             } else {
-                sequentialMovement.push(ActionTuple(w, node_index, move_right, curr->x, curr->y));
+                sequentialMovement.push(ActionTuple(w, node_index, move_right, curr->x, curr->y - VERTICAL_OFFSET));
                 node_adjust->addLocateRight(curr);
             }
         }
@@ -53,19 +52,22 @@ void BinarySearchTree::insert(int w)
         if (prev->weight > w) {
             new_node->x = prev->x - ADD_X;
             new_node->y = prev->y + ADD_Y;
-            sequentialMovement.push(ActionTuple(w, node_index, move_left, new_node->x, new_node->y));
+            sequentialMovement.push(ActionTuple(w, node_index, move_left, new_node->x, new_node->y - VERTICAL_OFFSET));
             prev->leftChild = new_node;
          } else {
             new_node->x = prev->x + ADD_X;
             new_node->y = prev->y + ADD_Y;
-            sequentialMovement.push(ActionTuple(w, node_index, move_right, new_node->x, new_node->y));
+            sequentialMovement.push(ActionTuple(w, node_index, move_right, new_node->x, new_node->y - VERTICAL_OFFSET));
             prev->rightChild = new_node;
         }
-
-        addEdge(prev, new_node, ++edge_index);
-        node_adjust->adjustNodePosition(prev, new_node, parallelMovement);
     }
     sequentialMovement.push(ActionTuple(w, node_index, no_type, new_node->x, new_node->y + VERTICAL_OFFSET));
+    new_node->y += VERTICAL_OFFSET;
+
+    if (prev != nullptr) {
+        addEdge(prev, new_node);
+        node_adjust->adjustNodePosition(prev, new_node, parallelMovement);
+    }
 }
 
 void BinarySearchTree::remove(int w)

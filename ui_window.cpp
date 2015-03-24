@@ -144,7 +144,8 @@ void WorksWidget::animationSlot()
 
     sGroup->addAnimation(pGroup);
     sGroup->start();
-    update();
+
+    connect(sGroup, SIGNAL(finished()), this, SLOT(edgeUpdateSlot()));
 }
 
 void WorksWidget::sequentialAnimation(QSequentialAnimationGroup *sag)
@@ -177,9 +178,9 @@ void WorksWidget::sequentialAnimation(QSequentialAnimationGroup *sag)
                 path.moveTo(label[index]->x(), label[index]->y());
 
                 if (type == move_left)
-                    path.quadTo(label[index]->x() - 64, label[index]->y(), x, y);
+                    path.quadTo(label[index]->x() - 32, label[index]->y(), x, y);
                 else
-                    path.quadTo(label[index]->x() + 64, label[index]->y(), x, y);
+                    path.quadTo(label[index]->x() + 32, label[index]->y(), x, y);
 
                 for (double i = 0; i < 1; i += 0.1)
                     animate->setKeyValueAt(i, path.pointAtPercent(i));
@@ -209,10 +210,29 @@ void WorksWidget::parallelAnimation(QParallelAnimationGroup *pag)
         animate->setStartValue(QPoint(label[index]->x(), label[index]->y()));
         animate->setEndValue(QPoint(x, y));
 
-        label[index]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
+        //  label[index]->setGeometry(x, y, FIXED_WIDTH, FIXED_HEIGHT);
 
         pag->addAnimation(animate);
     }
+}
+
+void WorksWidget::edgeUpdateSlot()
+{
+    foreach (Edge *edge, bst->edges) {
+        int s_index = edge->getStartIndex();
+        int e_index = edge->getEndIndex();
+
+        if (label[s_index]->x() > label[e_index]->x()) {
+            edge->setStartCoodinate(label[s_index]->x() + LEFT_X_OFFSET, label[s_index]->y() + Y_OFFSET);
+        } else {
+            edge->setStartCoodinate(label[s_index]->x() + RIGHT_X_OFFSET, label[s_index]->y() + Y_OFFSET);
+        }
+        edge->setEndCoodinate(label[e_index]->x() + MIDDLE_X_OFFSET, label[e_index]->y());
+
+        qDebug() << s_index << ' ' << label[s_index]->x() << ' ' << label[s_index]->y() << endl;
+        qDebug() << e_index << ' ' << label[e_index]->x() << ' ' << label[e_index]->y() << endl;
+    }
+    update();
 }
 
 void WorksWidget::changeStatus(const QString &str)

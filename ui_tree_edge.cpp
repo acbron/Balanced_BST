@@ -10,8 +10,9 @@ Edge::Edge() {}
 Edge::Edge(const Edge &) {}
 Edge::~Edge() {}
 
-Edge::Edge(int start_x, int start_y, int end_x, int end_y, int _index) :
-    startX(start_x), startY(start_y), endX(end_x), endY(end_y), index(_index), dir(left_edge)
+Edge::Edge(int start_x, int start_y, int end_x, int end_y, int s_index, int e_index) :
+    startX(start_x), startY(start_y), endX(end_x), endY(end_y),
+    startLabelIndex(s_index), endLabelIndex(e_index), dir(left_edge)
 {
 
 }
@@ -56,6 +57,16 @@ int Edge::getEndY() const
 EdgeDirection Edge::getDirection() const
 {
     return dir;
+}
+
+int Edge::getStartIndex() const
+{
+    return startLabelIndex;
+}
+
+int Edge::getEndIndex() const
+{
+    return endLabelIndex;
 }
 
 void Edge::paint(QPainter &painter)

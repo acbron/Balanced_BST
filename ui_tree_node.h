@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QWidget>
 #include <QString>
+#include "tree_node.h"
 
 extern const int FIXED_WIDTH;
 extern const int FIXED_HEIGHT;
@@ -18,12 +19,14 @@ private:
 public:
     UiNode(QWidget *, const QString &);
     ~UiNode();
+   // void setTarget(TreeNode **);
 
 protected:
     void paintEvent(QPaintEvent *);
 
 private:
     QString word;
+    TreeNode **ref_node;
 };
 
 #endif // UI_TREE_NODE_H

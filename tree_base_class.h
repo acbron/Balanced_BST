@@ -2,6 +2,7 @@
 #define TREE_BASE_CLASS_H
 
 #include <queue>
+#include <utility>
 #include <QPoint>
 #include "tree_node.h"
 #include "ui_tree_edge.h"
@@ -16,6 +17,7 @@ extern const int ADD_Y;
 enum ActionType {
     no_type, move_left, move_right
 };
+
 
 struct ActionTuple {
     int value;
@@ -33,6 +35,7 @@ struct ActionTuple {
     }
 };
 
+
 class NodeAdjust;
 
 class Tree {
@@ -49,14 +52,14 @@ public:
     virtual void insert(int) = 0;
     virtual void remove(int) = 0;
     virtual bool search(int) = 0;
-    void addEdge(const TreeNode *, const TreeNode *, int);
+    void addEdge(const TreeNode *, const TreeNode *);
 
 protected:
     void freeMemory(TreeNode *);
 
 public:
     std::queue <ActionTuple> sequentialMovement;
-    std::queue <ActionTuple> parallelMovement;
+    std::queue <ActionTuple>parallelMovement;
     NodeAdjust *node_adjust;
     QList <Edge *> edges;
 };

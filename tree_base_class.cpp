@@ -4,8 +4,8 @@
 const int INIT_X = 568;
 const int INIT_Y = 0;
 const int VERTICAL_OFFSET = 32;
-const int ADD_X = 64;
-const int ADD_Y = 64;
+const int ADD_X = 32;
+const int ADD_Y = 32;
 
 Tree::Tree() {
     node_adjust = new NodeAdjust;
@@ -28,9 +28,9 @@ void Tree::freeMemory(TreeNode *curr) {
 
 }
 
-void Tree::addEdge(const TreeNode *first, const TreeNode *second, int index)
+void Tree::addEdge(const TreeNode *first, const TreeNode *second)
 {
-    Edge *edge = new Edge(first->x, first->y, second->x, second->y, index);
+    Edge *edge = new Edge(first->x, first->y, second->x, second->y, first->id, second->id);
 
     if (first->leftChild == second)
         edge->setDirection(left_edge);
@@ -38,11 +38,11 @@ void Tree::addEdge(const TreeNode *first, const TreeNode *second, int index)
         edge->setDirection(right_edge);
 
     if (edge->getDirection() == left_edge)
-        edge->setStartCoodinate(edge->getStartX() + LEFT_X_OFFSET, edge->getStartY() + Y_OFFSET + VERTICAL_OFFSET);
+        edge->setStartCoodinate(edge->getStartX() + LEFT_X_OFFSET, edge->getStartY() + Y_OFFSET);
     else
-        edge->setStartCoodinate(edge->getStartX() + RIGHT_X_OFFSET, edge->getStartY() + Y_OFFSET + VERTICAL_OFFSET);
+        edge->setStartCoodinate(edge->getStartX() + RIGHT_X_OFFSET, edge->getStartY() + Y_OFFSET);
 
-    edge->setEndCoodinate(edge->getEndX() + MIDDLE_X_OFFSET, edge->getEndY() + VERTICAL_OFFSET);
+    edge->setEndCoodinate(edge->getEndX() + MIDDLE_X_OFFSET, edge->getEndY());
 
     edges << edge;
 }
