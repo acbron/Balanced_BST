@@ -6,10 +6,10 @@
 #include <QWidget>
 #include "tree_node.h"
 
-extern const int LEFT_X_OFFSET;
-extern const int RIGHT_X_OFFSET;
-extern const int MIDDLE_X_OFFSET;
-extern const int Y_OFFSET;
+extern const int LEFT_EDGE_X_OFFSET;
+extern const int RIGHT_EDGE_X_OFFSET;
+extern const int SON_X_OFFSET;
+extern const int PARENT_Y_OFFSET;
 
 enum EdgeDirection {
     left_edge, right_edge
@@ -22,9 +22,10 @@ private:
     Edge(const Edge &);
 
 public:
-    Edge(int, int, int, int, int, int);
+    Edge(int, int, int, int);
     ~Edge();
     void paint(QPainter &);
+    /*
     void setStartCoodinate(int, int);
     void setEndCoodinate(int, int);
     void setDirection(EdgeDirection);
@@ -35,15 +36,17 @@ public:
     EdgeDirection getDirection() const;
     int getStartIndex() const;
     int getEndIndex() const;
-
+*/
 private:
     int startX;
     int startY;
     int endX;
     int endY;
+    /*
     int startLabelIndex;
     int endLabelIndex;
     EdgeDirection dir;
+    */
 };
 
 #endif // UI_TREE_EDGE_H

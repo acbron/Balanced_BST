@@ -17,10 +17,10 @@ public:
     void insert(int);
     void remove(int);
     bool search(int);
+    TreeNode *getRoot();
 
 private:
     TreeNode *root;
-    static int node_index;
 };
 
 #endif // BINARY_SEARCH_TREE

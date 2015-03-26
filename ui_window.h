@@ -44,7 +44,7 @@ extern const int MAX_LINE_EDIT_LENGTH;
 extern const int MAX_LINE_INPUT_LENGTH;
 extern const int MIN_LINE_INPUT_LENGTH;
 
-const int MAX_LABEL_NUM = 100000;
+const int MAX_LABEL_NUM = 10000;
 
 class WorksWidget;
 class ToolBar;
@@ -94,9 +94,10 @@ private:
 public:
     WorksWidget(QWidget *);
     ~WorksWidget();
+    void edgeUpdateHelper(TreeNode *);
 
 protected:
-    void paintEvent(QPaintEvent *);
+   void paintEvent(QPaintEvent *);
 
 signals:
     void insertSignal() const;
@@ -107,9 +108,8 @@ public slots:
     void insertSlot(const QString &);
     void removeSlot(const QString &);
     void searchSlot(const QString &);
-    void animationSlot();
-    void edgeUpdateSlot();
-    void changeStatus(const QString &);
+    void labelUpdate();
+    void edgeUpdate();
 
 private:
     void sequentialAnimation(QSequentialAnimationGroup *);
@@ -117,6 +117,8 @@ private:
 
 private:
     UiNode *label[MAX_LABEL_NUM];
+    QList <Edge *> edges;
+    bool labelUsed[MAX_LABEL_NUM];
 
 private:
     Tree *bst;

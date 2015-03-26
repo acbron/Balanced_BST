@@ -27,15 +27,6 @@ MainWindow::MainWindow()
     centralWidget->setLayout(vlayout);
     createStatusBar();
 
-    /*
-    UiNode *label = new UiNode(workspace, 100, 100);
-
-    QPropertyAnimation *p = new QPropertyAnimation(label, "pos");
-    p->setDuration(10000);
-    p->setStartValue(QPoint(100, 100));
-    p->setEndValue(QPoint(500, 500));
-    p->start();
-    */
     connect(toolbar, SIGNAL(sendPaintingSignal(const QString &)), workspace, SLOT(insertSlot(const QString &)));
 
 }
@@ -93,7 +84,11 @@ WorksWidget::WorksWidget(QWidget *parent)
         bst = nullptr;
     }
     bst = new BinarySearchTree();
-    connect(this, SIGNAL(insertSignal()), this, SLOT(animationSlot()));
+
+    for (int i = 0; i < MAX_LABEL_NUM; i++)
+        labelUsed[i] = false;
+
+    connect(this, SIGNAL(insertSignal()), this, SLOT(labelUpdate()));
 }
 
 WorksWidget::~WorksWidget()
@@ -105,7 +100,7 @@ WorksWidget::~WorksWidget()
 void WorksWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    foreach (Edge *edge, bst->edges) {
+    foreach (Edge *edge, edges) {
         edge->paint(painter);
     }
 }
@@ -115,12 +110,6 @@ void WorksWidget::insertSlot(const QString &str)
     int value = str.toInt();
     bst->insert(value);
     emit insertSignal();
-    /*
-    int value = str.toInt();
-    label[value] = new UiNode(this, 100 * i, 100 * i, str);
-    label[value]->setGeometry(label[value]->getX(), label[value]->getY(), FIXED_WIDTH, FIXED_HEIGHT);
-    label[value]->show();
-    */
 }
 
 void WorksWidget::removeSlot(const QString &str)
@@ -133,6 +122,94 @@ void WorksWidget::searchSlot(const QString &str)
 
 }
 
+void WorksWidget::labelUpdate()
+{
+    QParallelAnimationGroup *pGroup = new QParallelAnimationGroup;
+
+    int totalIndex = Tree::node_index;
+
+    for (int i = 1; i <= totalIndex; i++) {
+        if (label[i] == nullptr) {
+            if (labelUsed[i] == false) {
+                TreeNode *tmp = bst->treeNodeTabel[i - 1];
+
+                int weight = tmp->weight;
+                int x = tmp->x;
+                int y = tmp->y;
+                QString str;
+                str.setNum(weight);
+
+                label[i] = new UiNode(this, str);
+                labelUsed[i] = true;
+
+                label[i]->setGeometry(100, 100, 32, 32);
+                label[i]->show();
+
+                QPropertyAnimation *animate = new QPropertyAnimation(label[i], "pos");
+                animate->setDuration(1000);
+                animate->setStartValue(QPoint(label[i]->x(), label[i]->y()));
+                animate->setEndValue(QPoint(x, y));
+                pGroup->addAnimation(animate);
+            }
+        } else {
+            if (bst->treeNodeTabel[i - 1] == nullptr) {
+                delete label[i];
+                label[i] = nullptr;
+            } else {
+                TreeNode *tmp = bst->treeNodeTabel[i - 1];
+
+                int x = tmp->x;
+                int y = tmp->y;
+                if (label[i]->x() != x || label[i]->y() != y) {
+                    QPropertyAnimation *animate = new QPropertyAnimation(label[i], "pos");
+                    animate->setDuration(1000);
+                    animate->setStartValue(QPoint(label[i]->x(), label[i]->y()));
+                    animate->setEndValue(QPoint(x, y));
+                    pGroup->addAnimation(animate);
+                }
+            }
+        }
+    }
+    pGroup->start();
+
+    connect(pGroup, SIGNAL(finished()), this, SLOT(edgeUpdate()));
+}
+
+void WorksWidget::edgeUpdateHelper(TreeNode *curr)
+{
+    if (curr == nullptr)
+        return;
+
+    if (curr->leftChild != nullptr) {
+        int start_x = curr->x + LEFT_EDGE_X_OFFSET;
+        int start_y = curr->y + PARENT_Y_OFFSET;
+        int end_x = curr->leftChild->x + SON_X_OFFSET;
+        int end_y = curr->leftChild->y;
+
+        Edge *edge = new Edge(start_x, start_y, end_x, end_y);
+        edges << edge;
+        edgeUpdateHelper(curr->leftChild);
+    }
+    if (curr->rightChild != nullptr) {
+        int start_x = curr->x + RIGHT_EDGE_X_OFFSET;
+        int start_y = curr->y + PARENT_Y_OFFSET;
+        int end_x = curr->rightChild->x + SON_X_OFFSET;
+        int end_y = curr->rightChild->y;
+
+        Edge *edge = new Edge(start_x, start_y, end_x, end_y);
+        edges << edge;
+        edgeUpdateHelper(curr->rightChild);
+    }
+}
+
+void WorksWidget::edgeUpdate()
+{
+    edges.clear();
+    TreeNode *curr = bst->getRoot();
+    edgeUpdateHelper(curr);
+    update();
+}
+/*
 void WorksWidget::animationSlot()
 {
     QSequentialAnimationGroup *sGroup = new QSequentialAnimationGroup;
@@ -216,28 +293,10 @@ void WorksWidget::parallelAnimation(QParallelAnimationGroup *pag)
     }
 }
 
-void WorksWidget::edgeUpdateSlot()
-{
-    foreach (Edge *edge, bst->edges) {
-        int s_index = edge->getStartIndex();
-        int e_index = edge->getEndIndex();
-
-        if (label[s_index]->x() > label[e_index]->x()) {
-            edge->setStartCoodinate(label[s_index]->x() + LEFT_X_OFFSET, label[s_index]->y() + Y_OFFSET);
-        } else {
-            edge->setStartCoodinate(label[s_index]->x() + RIGHT_X_OFFSET, label[s_index]->y() + Y_OFFSET);
-        }
-        edge->setEndCoodinate(label[e_index]->x() + MIDDLE_X_OFFSET, label[e_index]->y());
-
-        qDebug() << s_index << ' ' << label[s_index]->x() << ' ' << label[s_index]->y() << endl;
-        qDebug() << e_index << ' ' << label[e_index]->x() << ' ' << label[e_index]->y() << endl;
-    }
-    update();
-}
-
+*/
+/*
 void WorksWidget::changeStatus(const QString &str)
 {
-    /*
     i++;
     label = new UiNode(this, 100 * i, 100 * i, str);
     label->setGeometry(label->getX(), label->getY(), FIXED_WIDTH, FIXED_HEIGHT);
@@ -252,8 +311,8 @@ void WorksWidget::changeStatus(const QString &str)
     a.setStartValue(QRect(0, 0, 100, 100));
     a.setEndValue(QRect(100, 100, 100, 100));
     a.start();
-    */
 }
+*/
 
 /*
  * ToolBar

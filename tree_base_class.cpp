@@ -3,12 +3,12 @@
 
 const int INIT_X = 568;
 const int INIT_Y = 0;
-const int VERTICAL_OFFSET = 32;
-const int ADD_X = 32;
-const int ADD_Y = 32;
+
+int Tree::node_index = 0;
 
 Tree::Tree() {
     node_adjust = new NodeAdjust;
+    treeNodeTabel.clear();
 }
 
 Tree::~Tree() {
@@ -28,6 +28,7 @@ void Tree::freeMemory(TreeNode *curr) {
 
 }
 
+/*
 void Tree::addEdge(const TreeNode *first, const TreeNode *second)
 {
     Edge *edge = new Edge(first->x, first->y, second->x, second->y, first->id, second->id);
@@ -46,3 +47,4 @@ void Tree::addEdge(const TreeNode *first, const TreeNode *second)
 
     edges << edge;
 }
+*/

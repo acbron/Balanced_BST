@@ -6,7 +6,8 @@
 #include "ui_tree_node.h"
 #include "tree_base_class.h"
 
-struct ActionTuple;
+extern const int POSX_OFFSET;
+extern const int POSY_OFFSET;
 
 class NodeAdjust {
 
@@ -15,14 +16,9 @@ public:
     ~NodeAdjust();
 
 public:
-    void adjustNodePosition(const TreeNode *, const TreeNode *, std::queue <ActionTuple> &parallelMovement);
-    void addLocateLeft(TreeNode *);
-    void addLocateRight(TreeNode *);
-    void reset();
-
-private:
-    std::vector <TreeNode *> locateLeft;
-    std::vector <TreeNode *> locateRight;
+    void resizeTree(TreeNode **);
+    int resizeWidths(TreeNode **);
+    void adjustNodePosition(TreeNode **, int, int, int);
 };
 
 #endif // UI_ADJUSTMENT_H
