@@ -38,6 +38,7 @@ public:
     NodeAdjust *node_adjust;
     static int node_index;
     std::vector <TreeNode *> treeNodeTabel;
+    std::vector <int> nodeBitmap;
 };
 
 #endif // TREE_BASE_CLASS_H

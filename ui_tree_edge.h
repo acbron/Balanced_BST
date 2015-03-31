@@ -25,28 +25,12 @@ public:
     Edge(int, int, int, int);
     ~Edge();
     void paint(QPainter &);
-    /*
-    void setStartCoodinate(int, int);
-    void setEndCoodinate(int, int);
-    void setDirection(EdgeDirection);
-    int getStartX() const;
-    int getStartY() const;
-    int getEndX() const;
-    int getEndY() const;
-    EdgeDirection getDirection() const;
-    int getStartIndex() const;
-    int getEndIndex() const;
-*/
+
 private:
     int startX;
     int startY;
     int endX;
     int endY;
-    /*
-    int startLabelIndex;
-    int endLabelIndex;
-    EdgeDirection dir;
-    */
 };
 
 #endif // UI_TREE_EDGE_H

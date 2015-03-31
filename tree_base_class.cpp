@@ -9,6 +9,7 @@ int Tree::node_index = 0;
 Tree::Tree() {
     node_adjust = new NodeAdjust;
     treeNodeTabel.clear();
+    nodeBitmap.clear();
 }
 
 Tree::~Tree() {
@@ -27,24 +28,3 @@ void Tree::freeMemory(TreeNode *curr) {
     curr = nullptr;
 
 }
-
-/*
-void Tree::addEdge(const TreeNode *first, const TreeNode *second)
-{
-    Edge *edge = new Edge(first->x, first->y, second->x, second->y, first->id, second->id);
-
-    if (first->leftChild == second)
-        edge->setDirection(left_edge);
-    else
-        edge->setDirection(right_edge);
-
-    if (edge->getDirection() == left_edge)
-        edge->setStartCoodinate(edge->getStartX() + LEFT_X_OFFSET, edge->getStartY() + Y_OFFSET);
-    else
-        edge->setStartCoodinate(edge->getStartX() + RIGHT_X_OFFSET, edge->getStartY() + Y_OFFSET);
-
-    edge->setEndCoodinate(edge->getEndX() + MIDDLE_X_OFFSET, edge->getEndY());
-
-    edges << edge;
-}
-*/

@@ -19,6 +19,7 @@ private:
 public:
     UiNode(QWidget *, const QString &);
     ~UiNode();
+    void setNumber(const QString &);
 
 protected:
     void paintEvent(QPaintEvent *);

@@ -18,8 +18,7 @@ void BinarySearchTree::insert(int w)
 
     TreeNode *new_node = new TreeNode(w, ++node_index);
     this->treeNodeTabel.push_back(new_node);
-
-    //sequentialMovement.push(ActionTuple(w, node_index, no_type, new_node->x, new_node->y));
+    this->nodeBitmap.push_back(1);
 
     while (curr != nullptr) {
         prev = curr;
@@ -61,7 +60,24 @@ void BinarySearchTree::remove(int w)
     }
 
     if (curr != nullptr) {
-        if (curr->leftChild != nullptr && curr->rightChild != nullptr) {
+        if (curr->leftChild == nullptr && curr->rightChild == nullptr) {
+            if (curr == root) {
+                this->nodeBitmap[root->id - 1] = 0;
+                this->treeNodeTabel[root->id - 1] = nullptr;
+
+                root = nullptr;
+            } else {
+                if (prev->leftChild == curr)
+                    prev->leftChild = nullptr;
+                else if (prev->rightChild == curr)
+                    prev->rightChild = nullptr;
+            }
+
+            this->nodeBitmap[curr->id - 1] = 0;
+            this->treeNodeTabel[curr->id - 1] = nullptr;
+            delete curr;
+            curr = nullptr;
+        } else if (curr->leftChild != nullptr && curr->rightChild != nullptr) {
             TreeNode *successor = curr->rightChild;
             TreeNode *parent = curr;
 
@@ -70,29 +86,45 @@ void BinarySearchTree::remove(int w)
                 successor = successor->leftChild;
             }
 
+            if (parent->leftChild == successor)
+                parent->leftChild = successor->rightChild;
+            else if (parent->rightChild == successor)
+                parent->rightChild = successor->rightChild;
+
             curr->weight = successor->weight;
-            parent->leftChild = successor->rightChild;
+
+            this->nodeBitmap[successor->id - 1] = 0;
+            this->treeNodeTabel[successor->id - 1] = nullptr;
 
             delete successor;
             successor = nullptr;
-
         } else {
             if (curr->leftChild != nullptr) {
-                if (prev->leftChild == curr)
-                    prev->leftChild = curr->leftChild;
-                else
-                    prev->rightChild = curr->rightChild;
-            } else if (curr->rightChild != nullptr) {
-                if (prev->leftChild == curr)
-                    prev->leftChild = curr->rightChild;
-                else
-                    prev->rightChild = curr->rightChild;
-            }
+                TreeNode *tmp = curr->leftChild;
+                curr->leftChild = tmp->leftChild;
+                curr->rightChild = tmp->rightChild;
+                curr->weight = tmp->weight;
 
-            delete curr;
-            curr = nullptr;
+                this->nodeBitmap[tmp->id - 1] = 0;
+                this->treeNodeTabel[tmp->id - 1] = nullptr;
+
+                delete tmp;
+                tmp = nullptr;
+            } else if (curr->rightChild != nullptr) {
+                TreeNode *tmp = curr->rightChild;
+                curr->leftChild = tmp->leftChild;
+                curr->rightChild = tmp->rightChild;
+                curr->weight = tmp->weight;
+
+                this->nodeBitmap[tmp->id - 1] = 0;
+                this->treeNodeTabel[tmp->id - 1] = nullptr;
+
+                delete tmp;
+                tmp = nullptr;
+            }
         }
     }
+    node_adjust->resizeTree(&root);
 }
 
 bool BinarySearchTree::search(int w)

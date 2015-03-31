@@ -118,7 +118,6 @@ private:
 private:
     UiNode *label[MAX_LABEL_NUM];
     QList <Edge *> edges;
-    bool labelUsed[MAX_LABEL_NUM];
 
 private:
     Tree *bst;
@@ -153,10 +152,12 @@ private:
     void initialize();
 
 signals:
-     void sendPaintingSignal(const QString &) const;
+     void sendInsertClicked(const QString &) const;
+     void sendRemoveClicked(const QString &) const;
 
 public slots:
-    void emitPaintingSignal();
+    void insertClicked();
+    void removeClicked();
 
 private:
     QHBoxLayout *hlayout;

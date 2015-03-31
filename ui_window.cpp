@@ -27,7 +27,8 @@ MainWindow::MainWindow()
     centralWidget->setLayout(vlayout);
     createStatusBar();
 
-    connect(toolbar, SIGNAL(sendPaintingSignal(const QString &)), workspace, SLOT(insertSlot(const QString &)));
+    connect(toolbar, SIGNAL(sendInsertClicked(const QString &)), workspace, SLOT(insertSlot(const QString &)));
+    connect(toolbar, SIGNAL(sendRemoveClicked(const QString &)), workspace, SLOT(removeSlot(const QString &)));
 
 }
 
@@ -85,10 +86,8 @@ WorksWidget::WorksWidget(QWidget *parent)
     }
     bst = new BinarySearchTree();
 
-    for (int i = 0; i < MAX_LABEL_NUM; i++)
-        labelUsed[i] = false;
-
     connect(this, SIGNAL(insertSignal()), this, SLOT(labelUpdate()));
+    connect(this, SIGNAL(removeSignal()), this, SLOT(labelUpdate()));
 }
 
 WorksWidget::~WorksWidget()
@@ -114,7 +113,9 @@ void WorksWidget::insertSlot(const QString &str)
 
 void WorksWidget::removeSlot(const QString &str)
 {
-
+    int value = str.toInt();
+    bst->remove(value);
+    emit removeSignal();
 }
 
 void WorksWidget::searchSlot(const QString &str)
@@ -129,18 +130,22 @@ void WorksWidget::labelUpdate()
     int totalIndex = Tree::node_index;
 
     for (int i = 1; i <= totalIndex; i++) {
-        if (label[i] == nullptr) {
-            if (labelUsed[i] == false) {
-                TreeNode *tmp = bst->treeNodeTabel[i - 1];
+        int used = bst->nodeBitmap[i - 1];
+        if (used == 0) {
+            if (label[i] != nullptr) {
+                delete label[i];
+                label[i] = nullptr;
+            }
+        } else {
+            TreeNode *tmp = bst->treeNodeTabel[i - 1];
+            int weight = tmp->weight;
+            int x = tmp->x;
+            int y = tmp->y;
+            QString str;
+            str.setNum(weight);
 
-                int weight = tmp->weight;
-                int x = tmp->x;
-                int y = tmp->y;
-                QString str;
-                str.setNum(weight);
-
+            if (label[i] == nullptr) {
                 label[i] = new UiNode(this, str);
-                labelUsed[i] = true;
 
                 label[i]->setGeometry(100, 100, 32, 32);
                 label[i]->show();
@@ -150,16 +155,9 @@ void WorksWidget::labelUpdate()
                 animate->setStartValue(QPoint(label[i]->x(), label[i]->y()));
                 animate->setEndValue(QPoint(x, y));
                 pGroup->addAnimation(animate);
-            }
-        } else {
-            if (bst->treeNodeTabel[i - 1] == nullptr) {
-                delete label[i];
-                label[i] = nullptr;
             } else {
-                TreeNode *tmp = bst->treeNodeTabel[i - 1];
+                label[i]->setNumber(str);
 
-                int x = tmp->x;
-                int y = tmp->y;
                 if (label[i]->x() != x || label[i]->y() != y) {
                     QPropertyAnimation *animate = new QPropertyAnimation(label[i], "pos");
                     animate->setDuration(1000);
@@ -172,7 +170,8 @@ void WorksWidget::labelUpdate()
     }
     pGroup->start();
 
-    connect(pGroup, SIGNAL(finished()), this, SLOT(edgeUpdate()));
+    //connect(pGroup, SIGNAL(finished()), this, SLOT(edgeUpdate()));
+    edgeUpdate();
 }
 
 void WorksWidget::edgeUpdateHelper(TreeNode *curr)
@@ -357,12 +356,15 @@ void ToolBar::initElements()
     insertLine = new QLineEdit(this);
     removeLine = new QLineEdit(this);
     searchLine = new QLineEdit(this);
+
     insertLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
     removeLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
     searchLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
+
     insertLine->setInputMask(QString("9999"));
     removeLine->setInputMask(QString("9999"));
     searchLine->setInputMask(QString("9999"));
+
     insertLine->setPlaceholderText(tr("input..."));
     removeLine->setPlaceholderText(tr("input..."));
     searchLine->setPlaceholderText(tr("input..."));
@@ -370,11 +372,13 @@ void ToolBar::initElements()
     insertButton = new QPushButton(tr("insert"), this);
     removeButton = new QPushButton(tr("remove"), this);
     searchButton = new QPushButton(tr("search"), this);
+
     insertButton->setMaximumWidth(60);
     removeButton->setMaximumWidth(60);
     searchButton->setMaximumWidth(60);
 
-    connect(insertButton, SIGNAL(clicked()), this, SLOT(emitPaintingSignal()));
+    connect(insertButton, SIGNAL(clicked()), this, SLOT(insertClicked()));
+    connect(removeButton, SIGNAL(clicked()), this, SLOT(removeClicked()));
 }
 
 void ToolBar::initialize()
@@ -394,9 +398,15 @@ void ToolBar::initialize()
 
 }
 
-void ToolBar::emitPaintingSignal()
+void ToolBar::insertClicked()
 {
     QString tmp = insertLine->text();
-    emit sendPaintingSignal(tmp);
+    emit sendInsertClicked(tmp);
+}
+
+void ToolBar::removeClicked()
+{
+    QString tmp = removeLine->text();
+    emit sendRemoveClicked(tmp);
 }
 

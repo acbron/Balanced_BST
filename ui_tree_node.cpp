@@ -12,6 +12,12 @@ UiNode::UiNode(QWidget *parent, const QString &w) : QLabel(parent), word(w)
 
 UiNode::~UiNode() {}
 
+void UiNode::setNumber(const QString &num)
+{
+    word = num;
+    update();
+}
+
 void UiNode::paintEvent(QPaintEvent *event)
 {
     QLabel::paintEvent(event);
