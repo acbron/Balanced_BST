@@ -3,8 +3,6 @@
 
 #include <vector>
 #include "tree_node.h"
-#include "ui_tree_node.h"
-#include "tree_base_class.h"
 
 extern const int POSX_OFFSET;
 extern const int POSY_OFFSET;

@@ -4,15 +4,9 @@
 const int POSX_OFFSET = 64;
 const int POSY_OFFSET = 64;
 
-NodeAdjust::NodeAdjust()
-{
+NodeAdjust::NodeAdjust() {}
 
-}
-
-NodeAdjust::~NodeAdjust()
-{
-
-}
+NodeAdjust::~NodeAdjust() {}
 
 void NodeAdjust::resizeTree(TreeNode **ref_node)
 {
@@ -33,20 +27,20 @@ int NodeAdjust::resizeWidths(TreeNode **ref_node)
     return (*ref_node)->leftWidths + (*ref_node)->rightWidths;
 }
 
-void NodeAdjust::adjustNodePosition(TreeNode **ref_node, int x_pos, int y_pos, int side)
+void NodeAdjust::adjustNodePosition(TreeNode **ref_node, int pos_x, int pos_y, int side)
 {
     if ((*ref_node) != nullptr) {
-        (*ref_node)->y = y_pos;
+        (*ref_node)->y = pos_y;
 
         if (side == -1)
-            x_pos = x_pos - (*ref_node)->rightWidths;
+            pos_x = pos_x - (*ref_node)->rightWidths;
         else if (side == 1)
-            x_pos = x_pos + (*ref_node)->leftWidths;
+            pos_x = pos_x + (*ref_node)->leftWidths;
 
-        (*ref_node)->x = x_pos;
+        (*ref_node)->x = pos_x;
 
-        adjustNodePosition(&(*ref_node)->leftChild, x_pos, y_pos + POSY_OFFSET, -1);
-        adjustNodePosition(&(*ref_node)->rightChild, x_pos, y_pos + POSY_OFFSET, 1);
+        adjustNodePosition(&(*ref_node)->leftChild, pos_x, pos_y + POSY_OFFSET, -1);
+        adjustNodePosition(&(*ref_node)->rightChild, pos_x, pos_y + POSY_OFFSET, 1);
     }
 }
 

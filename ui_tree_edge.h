@@ -4,7 +4,6 @@
 #include <QString>
 #include <QPainter>
 #include <QWidget>
-#include "tree_node.h"
 
 extern const int LEFT_EDGE_X_OFFSET;
 extern const int RIGHT_EDGE_X_OFFSET;

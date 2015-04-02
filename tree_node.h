@@ -1,73 +1,34 @@
 #ifndef TREE_NODE_H
 #define TREE_NODE_H
 
-/*
- * tree node's color
- */
+#include <QLabel>
+#include <QPainter>
+#include <QWidget>
+#include <QString>
+#include "ui_tree_node.h"
+
+extern const int INIT_X;
+extern const int INIT_Y;
+extern const int INIT_POS_X;
+extern const int INIT_POS_Y;
+
 enum Color {
     normal, red, black
 };
 
-struct TreeNode {
+class TreeNode {
 
-    TreeNode() : weight(0),id(0),height(0),x(0),y(0),color(normal),
-        leftWidths(0), rightWidths(0), leftChild(nullptr),rightChild(nullptr)
-    {
-        // no content
-    }
+private:
+    TreeNode();
 
-    TreeNode(int w, int _id) : weight(w),id(_id),height(0),x(0),y(0),color(normal),
-        leftWidths(0), rightWidths(0), leftChild(nullptr),rightChild(nullptr)
-    {
-        // no content
-    }
+public:
+    TreeNode(int);
+    TreeNode(const TreeNode &);
+    TreeNode & operator = (const TreeNode &);
+    ~TreeNode();
 
-    TreeNode(const TreeNode &rhs) {
-        weight = rhs.weight;
-        id = rhs.id;
-        height = rhs.height;
-        x = rhs.x;
-        y = rhs.y;
-        color = rhs.color;
-        leftWidths = rhs.leftWidths;
-        rightWidths = rhs.rightWidths;
-
-        if (leftChild != nullptr) {
-            delete leftChild;
-        }
-        if (rightChild != nullptr) {
-            delete rightChild;
-        }
-
-        leftChild = new TreeNode(*rhs.leftChild);
-        rightChild = new TreeNode(*rhs.rightChild);
-    }
-
-    TreeNode &operator = (const TreeNode &rhs) {
-        weight = rhs.weight;
-        id = rhs.id;
-        height = rhs.height;
-        x = rhs.x;
-        y = rhs.y;
-        color = rhs.color;
-        leftWidths = rhs.leftWidths;
-        rightWidths = rhs.rightWidths;
-
-        if (leftChild != nullptr) {
-            delete leftChild;
-        }
-        if (rightChild != nullptr) {
-            delete rightChild;
-        }
-
-        leftChild = new TreeNode(*rhs.leftChild);
-        rightChild = new TreeNode(*rhs.rightChild);
-
-        return *this;
-    }
-
+public:
     int weight;
-    int id;
     int height;
     int x;
     int y;
@@ -76,7 +37,7 @@ struct TreeNode {
     int rightWidths;
     TreeNode *leftChild;
     TreeNode *rightChild;
+    NodeLabel *label;
 };
-
 
 #endif // TREE_NODE_H

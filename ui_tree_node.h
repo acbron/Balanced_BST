@@ -5,27 +5,27 @@
 #include <QPainter>
 #include <QWidget>
 #include <QString>
-#include "tree_node.h"
 
 extern const int FIXED_WIDTH;
 extern const int FIXED_HEIGHT;
 
-class UiNode : public QLabel {
+class NodeLabel : public QLabel {
     Q_OBJECT
 
 private:
-    UiNode(QWidget *);
+    NodeLabel(QWidget *);
+    NodeLabel(const NodeLabel &);
+    NodeLabel & operator = (const NodeLabel &);
 
 public:
-    UiNode(QWidget *, const QString &);
-    ~UiNode();
-    void setNumber(const QString &);
+    NodeLabel(QWidget *, int);
+    ~NodeLabel();
 
 protected:
     void paintEvent(QPaintEvent *);
 
 private:
-    QString word;
+    int weight;
 };
 
 #endif // UI_TREE_NODE_H

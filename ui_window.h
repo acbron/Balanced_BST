@@ -25,9 +25,8 @@
 #include <QPropertyAnimation>
 #include "ui_tree_edge.h"
 #include "ui_tree_node.h"
-#include "tree_base_class.h"
-#include "binary_search_tree.h"
-#include <queue>
+#include "bst_base.h"
+#include "normal_bst.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -56,12 +55,10 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-
     MainWindow();
     ~MainWindow();
 
 private:
-
     void createActions();
     void createMenus();
     void createToolBars();
@@ -69,9 +66,8 @@ private:
     void createStatusBar();
 
 private:
-
     QVBoxLayout *vlayout;
-    WorksWidget *workspace;
+    NormalBst *bst;
     ToolBar *toolbar;
     QMenu *selectMenu;
     QMenu *helpMenu;
@@ -85,6 +81,7 @@ private:
 /*
  * Working Area Widget
  */
+/*
 class WorksWidget : public QWidget {
     Q_OBJECT
 
@@ -122,7 +119,7 @@ private:
 private:
     Tree *bst;
 };
-
+*/
 
 /*
  * ToolBar
@@ -154,10 +151,12 @@ private:
 signals:
      void sendInsertClicked(const QString &) const;
      void sendRemoveClicked(const QString &) const;
+     void sendSearchClicked(const QString &) const;
 
 public slots:
     void insertClicked();
     void removeClicked();
+    void searchClicked();
 
 private:
     QHBoxLayout *hlayout;
