@@ -37,6 +37,7 @@ public:
     int rightWidths;
     TreeNode *leftChild;
     TreeNode *rightChild;
+    TreeNode *parent;
     NodeLabel *label;
 };
 

@@ -13,6 +13,10 @@
 #include "ui_tree_edge.h"
 #include "ui_adjustment.h"
 
+extern const int HIGH_LIGHT_X;
+extern const int HIGH_LIGHT_Y;
+extern const int HIGHT_LIGHT_OFFSET;
+
 class BinaryTree {
 public:
     BinaryTree() ;
@@ -24,8 +28,6 @@ public:
     virtual TreeNode * findNode(int) = 0;
     void setNodePos(TreeNode *);
     void setNodeLabel(QWidget *, TreeNode **);
-    void setHightLight(TreeNode *);
-    void unsetHightLight(TreeNode *);
 
 private:
     void setPosHelper(QParallelAnimationGroup **, TreeNode *);

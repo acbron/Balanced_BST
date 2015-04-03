@@ -5,15 +5,15 @@
 #include <QGraphicsOpacityEffect>
 
 const int INIT_X = 568;
-const int INIT_Y = 0;
+const int INIT_Y = 10;
 const int INIT_POS_X = 100;
 const int INIT_POS_Y = 100;
 
-TreeNode::TreeNode(){}
+TreeNode::TreeNode() {}
 
 TreeNode::TreeNode(int w) :
     weight(w), height(0), x(INIT_POS_X), y(INIT_POS_X), color(normal), leftWidths(0), rightWidths(0),
-    leftChild(nullptr), rightChild(nullptr), label(nullptr) {}
+    leftChild(nullptr), rightChild(nullptr), parent(nullptr), label(nullptr) {}
 
 TreeNode::TreeNode(const TreeNode &rhs) {
     weight = rhs.weight;
@@ -30,8 +30,13 @@ TreeNode::TreeNode(const TreeNode &rhs) {
     if (rightChild != nullptr) {
         delete rightChild;
     }
+    if (parent != nullptr) {
+        delete parent;
+    }
+
     leftChild = new TreeNode(*rhs.leftChild);
     rightChild = new TreeNode(*rhs.rightChild);
+    parent = new TreeNode(*rhs.parent);
 }
 
 TreeNode & TreeNode::operator = (const TreeNode &rhs) {
@@ -49,9 +54,13 @@ TreeNode & TreeNode::operator = (const TreeNode &rhs) {
     if (rightChild != nullptr) {
         delete rightChild;
     }
+    if (parent != nullptr) {
+        delete parent;
+    }
 
     leftChild = new TreeNode(*rhs.leftChild);
     rightChild = new TreeNode(*rhs.rightChild);
+    parent = new TreeNode(*rhs.parent);
 
     return *this;
 }

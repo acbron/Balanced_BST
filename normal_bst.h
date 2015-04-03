@@ -22,6 +22,7 @@ public slots:
     void RcvInsertClicked(const QString &);
     void RcvDeleteClicked(const QString &);
     void RcvSearchClicked(const QString &);
+    void unsetHighLight();
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -29,6 +30,10 @@ protected:
 private:
     void edgeUpdate();
     void edgeUpdateHelper(TreeNode *);
+    void setHighLight(QSequentialAnimationGroup **, int, int);
+
+private:
+    QLabel *high_light;
 };
 
 #endif // NORMAL_BST_H

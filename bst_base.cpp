@@ -1,5 +1,9 @@
 #include "bst_base.h"
 
+const int HIGH_LIGHT_X = 42;
+const int HIGH_LIGHT_Y = 42;
+const int HIGHT_LIGHT_OFFSET = 5;
+
 BinaryTree::BinaryTree() {}
 
 BinaryTree::~BinaryTree() {}
@@ -33,21 +37,6 @@ void BinaryTree::setPosHelper(QParallelAnimationGroup **pg, TreeNode *curr)
 
     setPosHelper(pg, curr->leftChild);
     setPosHelper(pg, curr->rightChild);
-}
-
-void BinaryTree::setHightLight(TreeNode *curr)
-{
-    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
-    effect->setColor(QColor(255, 215, 0));
-    effect->setOffset(0, 0);
-    effect->setBlurRadius(15);
-    curr->label->setGraphicsEffect(effect);
-}
-
-void BinaryTree::unsetHightLight(TreeNode *curr)
-{
-    QGraphicsDropShadowEffect *effect =  nullptr;
-    curr->label->setGraphicsEffect(effect);
 }
 
 void BinaryTree::freeMemory(TreeNode *curr)
