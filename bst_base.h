@@ -26,11 +26,8 @@ public:
     virtual void insertNode(int) = 0;
     virtual void deleteNode(int) = 0;
     virtual TreeNode * findNode(int) = 0;
-    void setNodePos(TreeNode *);
-    void setNodeLabel(QWidget *, TreeNode **);
 
 private:
-    void setPosHelper(QParallelAnimationGroup **, TreeNode *);
     void freeMemory(TreeNode *);
 
 public:

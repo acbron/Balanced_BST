@@ -2,6 +2,7 @@
 #define NORMAL_BST_H
 
 #include <QWidget>
+#include <QTimer>
 #include "bst_base.h"
 
 class NormalBst : public QWidget,BinaryTree {
@@ -22,18 +23,23 @@ public slots:
     void RcvInsertClicked(const QString &);
     void RcvDeleteClicked(const QString &);
     void RcvSearchClicked(const QString &);
+    void setNodePos();
     void unsetHighLight();
+    void edgeUpdate();
 
 protected:
     void paintEvent(QPaintEvent *);
 
 private:
-    void edgeUpdate();
+    void setNodeLabel(TreeNode **);
+    void setPosHelper(TreeNode *);
     void edgeUpdateHelper(TreeNode *);
-    void setHighLight(QSequentialAnimationGroup **, int, int);
+    void setHighLight(int, int);
 
 private:
     QLabel *high_light;
+    QSequentialAnimationGroup *sequential;
+    QParallelAnimationGroup *parallel;
 };
 
 #endif // NORMAL_BST_H

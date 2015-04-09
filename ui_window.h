@@ -79,49 +79,6 @@ private:
 };
 
 /*
- * Working Area Widget
- */
-/*
-class WorksWidget : public QWidget {
-    Q_OBJECT
-
-private:
-    WorksWidget();
-
-public:
-    WorksWidget(QWidget *);
-    ~WorksWidget();
-    void edgeUpdateHelper(TreeNode *);
-
-protected:
-   void paintEvent(QPaintEvent *);
-
-signals:
-    void insertSignal() const;
-    void removeSignal() const;
-    void searchSignal() const;
-
-public slots:
-    void insertSlot(const QString &);
-    void removeSlot(const QString &);
-    void searchSlot(const QString &);
-    void labelUpdate();
-    void edgeUpdate();
-
-private:
-    void sequentialAnimation(QSequentialAnimationGroup *);
-    void parallelAnimation(QParallelAnimationGroup *);
-
-private:
-    UiNode *label[MAX_LABEL_NUM];
-    QList <Edge *> edges;
-
-private:
-    Tree *bst;
-};
-*/
-
-/*
  * ToolBar
  */
 class ToolBar : public QWidget {
