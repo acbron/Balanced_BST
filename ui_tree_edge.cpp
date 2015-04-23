@@ -18,7 +18,7 @@ Edge::Edge(int start_x, int start_y, int end_x, int end_y) :
 
 void Edge::paint(QPainter &painter)
 {
-    painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
+    painter.setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawLine(startX, startY, endX, endY);
 }

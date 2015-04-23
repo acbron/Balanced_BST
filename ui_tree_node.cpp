@@ -15,18 +15,15 @@ NodeLabel & NodeLabel::operator = (const NodeLabel &rhs)
 NodeLabel::NodeLabel(QWidget *parent, int w) : QLabel(parent), weight(w)
 {
     setPixmap(QPixmap(":/img/Green.png"));
-    /*
-    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
-    effect->setColor(QColor(255, 215, 0));
-    effect->setOffset(0, 0);
-    effect->setBlurRadius(15);
-    setGraphicsEffect(effect);
-    */
 }
 
-
-
 NodeLabel::~NodeLabel()  {}
+
+void NodeLabel::setWeight(int w)
+{
+    this->weight = w;
+    update();
+}
 
 void NodeLabel::paintEvent(QPaintEvent *event)
 {

@@ -27,6 +27,7 @@
 #include "ui_tree_node.h"
 #include "bst_base.h"
 #include "normal_bst.h"
+#include "avl_tree.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -67,7 +68,7 @@ private:
 
 private:
     QVBoxLayout *vlayout;
-    NormalBst *bst;
+    AVLTree *bst;
     ToolBar *toolbar;
     QMenu *selectMenu;
     QMenu *helpMenu;

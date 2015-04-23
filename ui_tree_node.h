@@ -20,6 +20,7 @@ private:
 public:
     NodeLabel(QWidget *, int);
     ~NodeLabel();
+    void setWeight(int);
 
 protected:
     void paintEvent(QPaintEvent *);
