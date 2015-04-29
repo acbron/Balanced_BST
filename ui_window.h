@@ -69,7 +69,7 @@ private:
 
 private:
     QVBoxLayout *vlayout;
-    RBTree *bst;
+    BinaryTree *bst;
     ToolBar *toolbar;
     QMenu *selectMenu;
     QMenu *helpMenu;

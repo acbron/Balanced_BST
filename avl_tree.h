@@ -8,7 +8,7 @@ enum Cases {
     none, left_left, left_right, right_right, right_left
 };
 
-class AVLTree : public QWidget,BinaryTree {
+class AVLTree : public BinaryTree {
     Q_OBJECT
 private:
     AVLTree();
@@ -33,28 +33,6 @@ private:
     void caseLeftRight(TreeNode **);
     void caseRightRight(TreeNode **);
     void caseRightLeft(TreeNode **);
-
-public slots:
-    void RcvInsertClicked(const QString &);
-    void RcvDeleteClicked(const QString &);
-    void RcvSearchClicked(const QString &);
-    void setNodePos();
-    void unsetHighLight();
-    void edgeUpdate();
-
-protected:
-    void paintEvent(QPaintEvent *);
-
-private:
-    void setNodeLabel(TreeNode **);
-    void setPosHelper(TreeNode *);
-    void edgeUpdateHelper(TreeNode *);
-    void setHighLight(int, int);
-
-private:
-    QLabel *high_light;
-    QSequentialAnimationGroup *sequential;
-    QParallelAnimationGroup *parallel;
 };
 
 #endif // AVL_TREE_H
