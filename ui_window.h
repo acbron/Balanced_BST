@@ -28,6 +28,7 @@
 #include "bst_base.h"
 #include "normal_bst.h"
 #include "avl_tree.h"
+#include "red_black_tree.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -68,7 +69,7 @@ private:
 
 private:
     QVBoxLayout *vlayout;
-    AVLTree *bst;
+    RBTree *bst;
     ToolBar *toolbar;
     QMenu *selectMenu;
     QMenu *helpMenu;

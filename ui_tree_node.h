@@ -9,18 +9,22 @@
 extern const int FIXED_WIDTH;
 extern const int FIXED_HEIGHT;
 
+
+enum Color {
+    normal, red, black
+};
+
 class NodeLabel : public QLabel {
     Q_OBJECT
 
 private:
     NodeLabel(QWidget *);
-    NodeLabel(const NodeLabel &);
-    NodeLabel & operator = (const NodeLabel &);
 
 public:
-    NodeLabel(QWidget *, int);
+    NodeLabel(QWidget *, int, Color);
     ~NodeLabel();
     void setWeight(int);
+    void setColor(Color);
 
 protected:
     void paintEvent(QPaintEvent *);

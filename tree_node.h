@@ -12,10 +12,6 @@ extern const int INIT_Y;
 extern const int INIT_POS_X;
 extern const int INIT_POS_Y;
 
-enum Color {
-    normal, red, black
-};
-
 class TreeNode {
 
 private:
@@ -23,6 +19,7 @@ private:
 
 public:
     TreeNode(int);
+    TreeNode(int, Color);
     TreeNode(const TreeNode &);
     TreeNode & operator = (const TreeNode &);
     ~TreeNode();

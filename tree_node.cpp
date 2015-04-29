@@ -15,6 +15,10 @@ TreeNode::TreeNode(int w) :
     weight(w), height(0), x(INIT_POS_X), y(INIT_POS_X), color(normal), leftWidths(0), rightWidths(0),
     leftChild(nullptr), rightChild(nullptr), parent(nullptr), label(nullptr) {}
 
+TreeNode::TreeNode(int w, Color c) :
+    weight(w), height(0), x(INIT_POS_X), y(INIT_POS_Y), color(c), leftWidths(0), rightWidths(0),
+    leftChild(nullptr), rightChild(nullptr), parent(nullptr), label(nullptr) {}
+
 TreeNode::TreeNode(const TreeNode &rhs) {
     weight = rhs.weight;
     height = rhs.height;

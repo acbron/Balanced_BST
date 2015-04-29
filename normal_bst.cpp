@@ -222,7 +222,7 @@ void NormalBst::setNodePos()
 
 void NormalBst::setNodeLabel(TreeNode **curr)
 {
-    (*curr)->label = new NodeLabel(this, (*curr)->weight);
+    (*curr)->label = new NodeLabel(this, (*curr)->weight, normal);
     (*curr)->label->setGeometry((*curr)->x, (*curr)->y, FIXED_WIDTH, FIXED_HEIGHT);
     (*curr)->label->show();
 }

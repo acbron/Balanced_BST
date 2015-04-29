@@ -19,7 +19,7 @@ MainWindow::MainWindow()
     setCentralWidget(centralWidget);
 
     toolbar = new ToolBar(centralWidget);
-    bst = new AVLTree(centralWidget);
+    bst = new RBTree(centralWidget);
     bst->setMinimumSize(BASE_WIDTH, BASE_HEIGHT);
 
     vlayout->addWidget(toolbar);
