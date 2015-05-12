@@ -2,34 +2,34 @@
 
 const int BASE_HEIGHT = 600;
 const int BASE_WIDTH = 1200;
-const int MAX_TOOLBAR_HEIGHT = 48;
+const int MAX_TOOLBAR_HEIGHT = 42;
 const int MAX_LINE_EDIT_LENGTH = 128;
 const int MAX_LINE_INPUT_LENGTH = 4;
 const int MIN_LINE_INPUT_LENGTH = 1;
 
 MainWindow::MainWindow()
 {
-    createActions();
-    createMenus();
-
+    //setWindowFlags(Qt::FramelessWindowHint);
     vlayout = new QVBoxLayout();
     vlayout->setContentsMargins(0, 0, 0, 0);
 
-    QWidget *centralWidget = new QWidget(this);
+    centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
 
     toolbar = new ToolBar(centralWidget);
-    bst = new SBTree(centralWidget);
-    bst->setMinimumSize(BASE_WIDTH, BASE_HEIGHT);
-
+    bst = nullptr;
     vlayout->addWidget(toolbar);
-    vlayout->addWidget(bst);
+    this->setBST(0);
     centralWidget->setLayout(vlayout);
+
+    QPalette p(palette());
+    p.setColor(QPalette::Background, Qt::white);
+    centralWidget->setAutoFillBackground(true);
+    centralWidget->setPalette(p);
+
     createStatusBar();
 
-    connect(toolbar, SIGNAL(sendInsertClicked(const QString &)), bst, SLOT(RcvInsertClicked(const QString &)));
-    connect(toolbar, SIGNAL(sendRemoveClicked(const QString &)), bst, SLOT(RcvDeleteClicked(const QString &)));
-    connect(toolbar, SIGNAL(sendSearchClicked(const QString &)), bst, SLOT(RcvSearchClicked(const QString &)));
+    connect(toolbar, SIGNAL(itemChanged(int)), this, SLOT(setBST(int)));
 }
 
 MainWindow::~MainWindow()
@@ -37,37 +37,38 @@ MainWindow::~MainWindow()
 
 }
 
-
-
-void MainWindow::createActions()
-{
-    bstAction = new QAction(tr("&Binary Search Tree"), this);
-    avlAction = new QAction(tr("&AVL Tree"), this);
-    rbtAction = new QAction(tr("&Red Black Tree"), this);
-    sbtAction = new QAction(tr("&Size Balanced Tree"), this);
-
-    aboutAction = new QAction(tr("&About"), this);
-    connect(aboutAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-}
-
-void MainWindow::createMenus()
-{
-    selectMenu = menuBar()->addMenu(tr("&Select"));
-    helpMenu = menuBar()->addMenu(tr("&Help"));
-
-    selectMenu->addAction(bstAction);
-    selectMenu->addAction(avlAction);
-    selectMenu->addAction(rbtAction);
-    selectMenu->addAction(sbtAction);
-
-    selectMenu->setActiveAction(bstAction);
-
-    helpMenu->addAction(aboutAction);
-}
-
 void MainWindow::createStatusBar()
 {
     statusBar()->showMessage(tr("Status Bar"));
+}
+
+void MainWindow::setBST(int index)
+{
+    if (bst != nullptr) {
+        delete bst;
+        bst = nullptr;
+    }
+    switch (index) {
+    case 0:
+        bst = new NormalBst(this->centralWidget);
+        break;
+    case 1:
+        bst = new AVLTree(this->centralWidget);
+        break;
+    case 2:
+        bst = new RBTree(this->centralWidget);
+        break;
+    case 3:
+        bst = new SBTree(this->centralWidget);
+        break;
+    default:
+        break;
+    }
+    bst->setMinimumSize(BASE_WIDTH, BASE_HEIGHT);
+    this->vlayout->addWidget(bst);
+    connect(toolbar, SIGNAL(sendInsertClicked(const QString &)), bst, SLOT(RcvInsertClicked(const QString &)));
+    connect(toolbar, SIGNAL(sendRemoveClicked(const QString &)), bst, SLOT(RcvDeleteClicked(const QString &)));
+    connect(toolbar, SIGNAL(sendSearchClicked(const QString &)), bst, SLOT(RcvSearchClicked(const QString &)));
 }
 
 /*
@@ -99,6 +100,7 @@ void ToolBar::initLayout()
 {
     hlayout = new QHBoxLayout();
     hlayout->setAlignment(Qt::AlignLeft);
+    hlayout->addWidget(combo);
     hlayout->addWidget(insertLine);
     hlayout->addWidget(insertButton);
     hlayout->addWidget(removeLine);
@@ -110,6 +112,12 @@ void ToolBar::initLayout()
 
 void ToolBar::initElements()
 {
+    combo = new QComboBox(this);
+    combo->setMaximumWidth(180);
+    combo->addItem("Binary Search Tree");
+    combo->addItem("AVL Tree");
+    combo->addItem("Red Black Tree");
+    combo->addItem("Size Balanced Tree");
     insertLine = new QLineEdit(this);
     removeLine = new QLineEdit(this);
     searchLine = new QLineEdit(this);
@@ -134,6 +142,7 @@ void ToolBar::initElements()
     removeButton->setMaximumWidth(60);
     searchButton->setMaximumWidth(60);
 
+    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(comboChanged(int)));
     connect(insertButton, SIGNAL(clicked()), this, SLOT(insertClicked()));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removeClicked()));
     connect(searchButton, SIGNAL(clicked()), this, SLOT(searchClicked()));
@@ -144,16 +153,21 @@ void ToolBar::initialize()
     initSize();
     initElements();
     initLayout();
-    /*
- * Set Background
- *
-    QPixmap pixmap = QPixmap(":/img/ToolBar.png").scaled(this->size());
-    QPalette Pal(palette());
-    Pal.setBrush(QPalette::Background, QBrush(pixmap));
-    setAutoFillBackground(true);
-    setPalette(Pal);
-*/
 
+    QLinearGradient gradient(0, 0, 0, MAX_TOOLBAR_HEIGHT);
+    gradient.setColorAt(0, Qt::gray);
+    gradient.setColorAt(1, Qt::black);
+    QPalette p(palette());
+    QBrush brush(gradient);
+    p.setBrush(QPalette::Background, QColor("#d8d8d8"));
+    p.setColor(QPalette::Shadow, Qt::red);
+    setAutoFillBackground(true);
+    setPalette(p);
+}
+
+void ToolBar::comboChanged(int index)
+{
+    emit itemChanged(index);
 }
 
 void ToolBar::insertClicked()

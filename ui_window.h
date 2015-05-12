@@ -61,24 +61,19 @@ public:
     MainWindow();
     ~MainWindow();
 
+protected slots:
+    void setBST(int);
+
 private:
-    void createActions();
-    void createMenus();
     void createToolBars();
     void createLayouts();
     void createStatusBar();
 
 private:
+    QWidget *centralWidget;
     QVBoxLayout *vlayout;
     BinaryTree *bst;
     ToolBar *toolbar;
-    QMenu *selectMenu;
-    QMenu *helpMenu;
-    QAction *bstAction;
-    QAction *avlAction;
-    QAction *rbtAction;
-    QAction *sbtAction;
-    QAction *aboutAction;
 };
 
 /*
@@ -109,17 +104,20 @@ private:
     void initialize();
 
 signals:
-     void sendInsertClicked(const QString &) const;
-     void sendRemoveClicked(const QString &) const;
-     void sendSearchClicked(const QString &) const;
+    void itemChanged(int) const;
+    void sendInsertClicked(const QString &) const;
+    void sendRemoveClicked(const QString &) const;
+    void sendSearchClicked(const QString &) const;
 
 public slots:
+    void comboChanged(int);
     void insertClicked();
     void removeClicked();
     void searchClicked();
 
 private:
     QHBoxLayout *hlayout;
+    QComboBox *combo;
     QLineEdit *insertLine;
     QLineEdit *removeLine;
     QLineEdit *searchLine;
