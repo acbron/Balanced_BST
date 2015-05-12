@@ -30,6 +30,7 @@ public:
     int x;
     int y;
     Color color;
+    int sizes;
     int leftWidths;
     int rightWidths;
     TreeNode *leftChild;

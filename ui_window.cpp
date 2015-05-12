@@ -19,7 +19,7 @@ MainWindow::MainWindow()
     setCentralWidget(centralWidget);
 
     toolbar = new ToolBar(centralWidget);
-    bst = new RBTree(centralWidget);
+    bst = new SBTree(centralWidget);
     bst->setMinimumSize(BASE_WIDTH, BASE_HEIGHT);
 
     vlayout->addWidget(toolbar);
@@ -59,6 +59,8 @@ void MainWindow::createMenus()
     selectMenu->addAction(avlAction);
     selectMenu->addAction(rbtAction);
     selectMenu->addAction(sbtAction);
+
+    selectMenu->setActiveAction(bstAction);
 
     helpMenu->addAction(aboutAction);
 }

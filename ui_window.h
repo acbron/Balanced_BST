@@ -29,6 +29,7 @@
 #include "normal_bst.h"
 #include "avl_tree.h"
 #include "red_black_tree.h"
+#include "size_balance_tree.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
