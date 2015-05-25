@@ -61,6 +61,9 @@ public:
     MainWindow();
     ~MainWindow();
 
+protected:
+    void resizeEvent(QResizeEvent *);
+
 protected slots:
     void setBST(int);
 
@@ -74,11 +77,14 @@ private:
     QVBoxLayout *vlayout;
     BinaryTree *bst;
     ToolBar *toolbar;
+    QLabel *status_bar_msg;
 };
 
 /*
  * ToolBar
  */
+class LineEdit;
+
 class ToolBar : public QWidget {
     Q_OBJECT
 
@@ -118,12 +124,26 @@ public slots:
 private:
     QHBoxLayout *hlayout;
     QComboBox *combo;
-    QLineEdit *insertLine;
-    QLineEdit *removeLine;
-    QLineEdit *searchLine;
+    LineEdit *insertLine;
+    LineEdit *removeLine;
+    LineEdit *searchLine;
     QPushButton *insertButton;
     QPushButton *removeButton;
     QPushButton *searchButton;
+};
+
+/*
+ * LineEdit
+ */
+class LineEdit : public QLineEdit {
+    Q_OBJECT
+public:
+    LineEdit();
+    LineEdit(QWidget *);
+    ~LineEdit();
+protected:
+    void mousePressEvent(QMouseEvent *);
+    void focusOutEvent(QFocusEvent *);
 };
 
 #endif // UI_WINDOW_H

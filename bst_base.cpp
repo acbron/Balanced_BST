@@ -82,6 +82,7 @@ void BinaryTree::setPosHelper(TreeNode *curr)
 
     int x = curr->x;
     int y = curr->y;
+
     QPropertyAnimation *animate = new QPropertyAnimation(curr->label, "pos");
     animate->setDuration(1000);
     animate->setStartValue(QPoint(curr->label->x(), curr->label->y()));

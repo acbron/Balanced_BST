@@ -1,6 +1,6 @@
 #include "ui_window.h"
 
-const int BASE_HEIGHT = 600;
+const int BASE_HEIGHT = 700;
 const int BASE_WIDTH = 1200;
 const int MAX_TOOLBAR_HEIGHT = 42;
 const int MAX_LINE_EDIT_LENGTH = 128;
@@ -9,7 +9,9 @@ const int MIN_LINE_INPUT_LENGTH = 1;
 
 MainWindow::MainWindow()
 {
-    //setWindowFlags(Qt::FramelessWindowHint);
+    setMinimumSize(BASE_WIDTH, BASE_HEIGHT);
+    setWindowTitle("Binary Search Tree Visualization");
+
     vlayout = new QVBoxLayout();
     vlayout->setContentsMargins(0, 0, 0, 0);
 
@@ -39,7 +41,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::createStatusBar()
 {
-    statusBar()->showMessage(tr("Status Bar"));
+    int width = this->width();
+
+    statusBar()->setMinimumSize(width, 100);
+
+    status_bar_msg = new QLabel(this);
+    QFont font;
+    font.setWeight(20);
+    font.setPixelSize(20);
+    status_bar_msg->setFont(font);
+    status_bar_msg->setText("Status bar");
+    status_bar_msg->setStyleSheet("background:white");
+    status_bar_msg->setMinimumSize(width - 4, 94);
+    status_bar_msg->setAlignment(Qt::AlignLeft);
+
+    statusBar()->addWidget(status_bar_msg);
 }
 
 void MainWindow::setBST(int index)
@@ -64,11 +80,17 @@ void MainWindow::setBST(int index)
     default:
         break;
     }
-    bst->setMinimumSize(BASE_WIDTH, BASE_HEIGHT);
+
     this->vlayout->addWidget(bst);
     connect(toolbar, SIGNAL(sendInsertClicked(const QString &)), bst, SLOT(RcvInsertClicked(const QString &)));
     connect(toolbar, SIGNAL(sendRemoveClicked(const QString &)), bst, SLOT(RcvDeleteClicked(const QString &)));
     connect(toolbar, SIGNAL(sendSearchClicked(const QString &)), bst, SLOT(RcvSearchClicked(const QString &)));
+}
+
+void MainWindow::resizeEvent(QResizeEvent *)
+{
+    int width = this->width();
+    status_bar_msg->resize(width - 4, 94);
 }
 
 /*
@@ -118,9 +140,9 @@ void ToolBar::initElements()
     combo->addItem("AVL Tree");
     combo->addItem("Red Black Tree");
     combo->addItem("Size Balanced Tree");
-    insertLine = new QLineEdit(this);
-    removeLine = new QLineEdit(this);
-    searchLine = new QLineEdit(this);
+    insertLine = new LineEdit(this);
+    removeLine = new LineEdit(this);
+    searchLine = new LineEdit(this);
 
     insertLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
     removeLine->setFixedWidth(MAX_LINE_EDIT_LENGTH);
@@ -135,7 +157,7 @@ void ToolBar::initElements()
     searchLine->setPlaceholderText(tr("input..."));
 
     insertButton = new QPushButton(tr("insert"), this);
-    removeButton = new QPushButton(tr("remove"), this);
+    removeButton = new QPushButton(tr("delete"), this);
     searchButton = new QPushButton(tr("search"), this);
 
     insertButton->setMaximumWidth(60);
@@ -173,17 +195,50 @@ void ToolBar::comboChanged(int index)
 void ToolBar::insertClicked()
 {
     QString tmp = insertLine->text();
+    insertLine->clear();
     emit sendInsertClicked(tmp);
 }
 
 void ToolBar::removeClicked()
 {
     QString tmp = removeLine->text();
+    removeLine->clear();
     emit sendRemoveClicked(tmp);
 }
 
 void ToolBar::searchClicked()
 {
     QString tmp = searchLine->text();
+    searchLine->clear();
     emit sendSearchClicked(tmp);
+}
+
+/*
+ * LineEdit
+ */
+LineEdit::LineEdit() : QLineEdit()
+{
+
+}
+
+LineEdit::LineEdit(QWidget *p) : QLineEdit(p)
+{
+        setParent(p);
+}
+
+LineEdit::~LineEdit()
+{
+
+}
+
+void LineEdit::mousePressEvent(QMouseEvent *)
+{
+        setCursorPosition(0);
+        setPlaceholderText("");
+}
+
+void LineEdit::focusOutEvent(QFocusEvent *e)
+{
+        QLineEdit::focusOutEvent(e);
+        setPlaceholderText("input...");
 }
