@@ -26,6 +26,11 @@ public:
     virtual void deleteNode(int) = 0;
     virtual TreeNode * findNode(int) = 0;
 
+signals:
+    void insertStatusMsg(const QString &, int, bool);
+    void deleteStatusMsg(const QString &, int, bool);
+    void searchStatusMsg(const QString &, int, bool);
+
 public slots:
     void RcvInsertClicked(const QString &);
     void RcvDeleteClicked(const QString &);

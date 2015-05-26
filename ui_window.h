@@ -66,6 +66,7 @@ protected:
 
 protected slots:
     void setBST(int);
+    void updateStatusBar(const QString &, int, bool);
 
 private:
     void createToolBars();
@@ -94,14 +95,6 @@ private:
 public:
     ToolBar(QWidget *);
     ~ToolBar();
-
-    void paintEvent(QPaintEvent *)
-    {
-        QPainter p(this);
-        p.setPen(QColor(211, 211, 211));
-        p.setRenderHint(QPainter::Antialiasing, true);
-        p.drawRoundedRect(0, 0, width(), height(), 5, 5);
-    }
 
 private:
     void initSize();

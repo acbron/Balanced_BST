@@ -18,6 +18,9 @@ public:
     void insertNode(int);
     void  deleteNode(int);
     TreeNode * findNode(int);
+
+private:
+    void deleteHelper(TreeNode **, int);
 };
 
 #endif // NORMAL_BST_H

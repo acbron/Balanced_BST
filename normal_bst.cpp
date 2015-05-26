@@ -64,10 +64,10 @@ void NormalBst::insertNode(int w)
         this->setNodePos();
     }
 
-   connect(parallel, SIGNAL(finished()), this, SLOT(edgeUpdate()));
-   if (parallel->duration() == 0) {
-       this->edgeUpdate();
-   }
+    connect(parallel, SIGNAL(finished()), this, SLOT(edgeUpdate()));
+    if (parallel->duration() == 0) {
+        this->edgeUpdate();
+    }
 }
 
 void NormalBst::deleteNode(int w)
@@ -76,18 +76,23 @@ void NormalBst::deleteNode(int w)
 
     curr = this->findNode(w);
 
-    if (curr != nullptr) {
+    if (curr == nullptr)
+        return;
+
+    this->deleteHelper(&root, w);
+   /* if (curr != nullptr) {
         if (curr->leftChild == nullptr && curr->rightChild == nullptr) {
             if (curr == root) {
+                delete root;
                 root = nullptr;
             } else {
                 if (curr->parent->leftChild == curr)
                     curr->parent->leftChild = nullptr;
                 else if (curr->parent->rightChild == curr)
                     curr->parent->rightChild = nullptr;
+                delete curr;
+                curr = nullptr;
             }
-            delete curr;
-            curr = nullptr;
         } else if (curr->leftChild != nullptr && curr->rightChild != nullptr) {
             TreeNode *successor = curr->rightChild;
 
@@ -102,12 +107,14 @@ void NormalBst::deleteNode(int w)
             if (successor->rightChild != nullptr)
                 successor->rightChild->parent = successor->parent;
 
-            if (curr->parent->leftChild == curr) {
-                curr->parent->leftChild = successor;
-                successor->parent = curr->parent;
-            } else if (curr->parent->rightChild == curr) {
-                curr->parent->rightChild = successor;
-                successor->parent = curr->parent;
+            if (curr->parent != nullptr) {
+                if (curr->parent->leftChild == curr) {
+                    curr->parent->leftChild = successor;
+                    successor->parent = curr->parent;
+                } else if (curr->parent->rightChild == curr) {
+                    curr->parent->rightChild = successor;
+                    successor->parent = curr->parent;
+                }
             }
             successor->leftChild = curr->leftChild;
             successor->rightChild = curr->rightChild;
@@ -121,36 +128,68 @@ void NormalBst::deleteNode(int w)
             curr = nullptr;
         } else {
             if (curr->leftChild != nullptr) {
-                if (curr->parent->leftChild == curr)
-                    curr->parent->leftChild = curr->leftChild;
-                else if (curr->parent->rightChild == curr)
-                    curr->parent->rightChild = curr->leftChild;
-
+                if (curr->parent != nullptr) {
+                    if (curr->parent->leftChild == curr)
+                        curr->parent->leftChild = curr->leftChild;
+                    else if (curr->parent->rightChild == curr)
+                        curr->parent->rightChild = curr->leftChild;
+                }
                 curr->leftChild->parent = curr->parent;
 
                 delete curr;
                 curr = nullptr;
             } else if (curr->rightChild != nullptr) {
-                if (curr->parent->leftChild == curr)
-                    curr->parent->leftChild = curr->rightChild;
-                else if (curr->parent->rightChild == curr)
-                    curr->parent->rightChild = curr->rightChild;
-
+                if (curr->parent != nullptr) {
+                    if (curr->parent->leftChild == curr)
+                        curr->parent->leftChild = curr->rightChild;
+                    else if (curr->parent->rightChild == curr)
+                        curr->parent->rightChild = curr->rightChild;
+                }
                 curr->rightChild->parent = curr->parent;
+
                 delete curr;
                 curr = nullptr;
             }
         }
-    }
+    }*/
     node_adjust->resizeTree(&root);
     connect(sequential, SIGNAL(finished()), this, SLOT(setNodePos()));
     if (sequential->duration() == 0) {
         this->setNodePos();
     }
-   connect(parallel, SIGNAL(finished()), this, SLOT(edgeUpdate()));
-   if (parallel->duration() == 0) {
-       this->edgeUpdate();
-   }
+    connect(parallel, SIGNAL(finished()), this, SLOT(edgeUpdate()));
+    if (parallel->duration() == 0) {
+        this->edgeUpdate();
+    }
+}
+
+void NormalBst::deleteHelper(TreeNode **curr, int w)
+{
+    if ((*curr)->weight < w) {
+        this->deleteHelper(&(*curr)->rightChild, w);
+    } else if ((*curr)->weight > w) {
+        this->deleteHelper(&(*curr)->leftChild, w);
+    } else {
+        if ((*curr)->leftChild == nullptr && (*curr)->rightChild == nullptr) {
+            delete (*curr);
+            (*curr) = nullptr;
+            return;
+        } else {
+            if ((*curr)->leftChild != nullptr && (*curr)->rightChild != nullptr) {
+                TreeNode *successor = (*curr)->rightChild;
+                while (successor->leftChild)
+                    successor = successor->leftChild;
+                (*curr)->weight = successor->weight;
+                this->deleteHelper(&(*curr)->rightChild, successor->weight);
+            } else if ((*curr)->leftChild != nullptr) {
+                (*curr)->weight = (*curr)->leftChild->weight;
+                this->deleteHelper(&(*curr)->leftChild, (*curr)->leftChild->weight);
+            } else {
+                (*curr)->weight = (*curr)->rightChild->weight;
+                this->deleteHelper(&(*curr)->rightChild, (*curr)->rightChild->weight);
+            }
+        }
+    }
 }
 
 TreeNode * NormalBst::findNode(int w)

@@ -1,4 +1,5 @@
 #include "bst_base.h"
+#include "ui_window.h"
 
 const int HIGH_LIGHT_X = 42;
 const int HIGH_LIGHT_Y = 42;
@@ -47,18 +48,29 @@ void BinaryTree::RcvInsertClicked(const QString &str)
 {
     int value = str.toInt();
     this->insertNode(value);
+    emit insertStatusMsg(str, 0, true);
 }
 
 void BinaryTree::RcvDeleteClicked(const QString &str)
 {
     int value = str.toInt();
-    this->deleteNode(value);
+    TreeNode *curr = this->findNode(value);
+    if (curr == nullptr) {
+        emit deleteStatusMsg(str, 1, false);
+    } else {
+        this->deleteNode(value);
+        emit deleteStatusMsg(str, 1, true);
+    }
 }
 
 void BinaryTree::RcvSearchClicked(const QString &str)
 {
     int value = str.toInt();
-    this->findNode(value);
+    TreeNode *curr = this->findNode(value);
+    if (curr == nullptr)
+        emit searchStatusMsg(str, 2, false);
+    else
+        emit searchStatusMsg(str, 2, true);
 }
 
 void BinaryTree::setNodePos()
@@ -82,6 +94,8 @@ void BinaryTree::setPosHelper(TreeNode *curr)
 
     int x = curr->x;
     int y = curr->y;
+
+    curr->label->setWeight(curr->weight);
 
     QPropertyAnimation *animate = new QPropertyAnimation(curr->label, "pos");
     animate->setDuration(1000);

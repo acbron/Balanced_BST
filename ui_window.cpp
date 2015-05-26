@@ -44,7 +44,7 @@ void MainWindow::createStatusBar()
     int width = this->width();
 
     statusBar()->setMinimumSize(width, 100);
-
+    statusBar()->setStyleSheet("background:#404040");
     status_bar_msg = new QLabel(this);
     QFont font;
     font.setWeight(20);
@@ -52,7 +52,7 @@ void MainWindow::createStatusBar()
     status_bar_msg->setFont(font);
     status_bar_msg->setText("Status bar");
     status_bar_msg->setStyleSheet("background:white");
-    status_bar_msg->setMinimumSize(width - 4, 94);
+    status_bar_msg->setMinimumSize(width - 6, 92);
     status_bar_msg->setAlignment(Qt::AlignLeft);
 
     statusBar()->addWidget(status_bar_msg);
@@ -85,12 +85,34 @@ void MainWindow::setBST(int index)
     connect(toolbar, SIGNAL(sendInsertClicked(const QString &)), bst, SLOT(RcvInsertClicked(const QString &)));
     connect(toolbar, SIGNAL(sendRemoveClicked(const QString &)), bst, SLOT(RcvDeleteClicked(const QString &)));
     connect(toolbar, SIGNAL(sendSearchClicked(const QString &)), bst, SLOT(RcvSearchClicked(const QString &)));
+    connect(bst, SIGNAL(insertStatusMsg(QString,int,bool)), this, SLOT(updateStatusBar(QString,int,bool)));
+    connect(bst, SIGNAL(deleteStatusMsg(QString,int,bool)), this, SLOT(updateStatusBar(QString,int,bool)));
+    connect(bst, SIGNAL(searchStatusMsg(QString,int,bool)), this, SLOT(updateStatusBar(QString,int,bool)));
+}
+
+void MainWindow::updateStatusBar(const QString &str, int flag, bool isSuccess)
+{
+    QString msg;
+    if (flag == 0) {
+        msg = "insert " + str + " successfully.";
+    } else if (flag == 1) {
+        if (isSuccess)
+            msg = "delete " + str + " successfully.";
+        else
+            msg = str + " can not be found, deletion failed.";
+    } else {
+        if (isSuccess)
+            msg = str + " was found.";
+        else
+            msg = str + " can not be found.";
+    }
+    this->status_bar_msg->setText(msg);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *)
 {
     int width = this->width();
-    status_bar_msg->resize(width - 4, 94);
+    status_bar_msg->resize(width - 6, 92);
 }
 
 /*
@@ -176,13 +198,8 @@ void ToolBar::initialize()
     initElements();
     initLayout();
 
-    QLinearGradient gradient(0, 0, 0, MAX_TOOLBAR_HEIGHT);
-    gradient.setColorAt(0, Qt::gray);
-    gradient.setColorAt(1, Qt::black);
     QPalette p(palette());
-    QBrush brush(gradient);
-    p.setBrush(QPalette::Background, QColor("#d8d8d8"));
-    p.setColor(QPalette::Shadow, Qt::red);
+    p.setBrush(QPalette::Background, QColor("#404040"));
     setAutoFillBackground(true);
     setPalette(p);
 }
